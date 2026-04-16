@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Betyg och bedömning i YH</title>
+<style>
+:root {
+  --blue-dark: #8b3a0d;
+  --blue-mid: #B95822;
+  --blue-light: #e86e2c;
+  --amber: #457E7B;
+  --amber-light: #dff0ee;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --bg: rgba(185,88,34,0.09);
+  --bg-card: #ffffff;
+  --text: #1a202c;
+  --text-muted: #6b7280;
+  --border: #e4d5c8;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* TOP BAR */
+#topbar {
+  background: var(--blue-dark);
+  color: white;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+#topbar h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.01em; }
+#topbar .logo-sub { font-size: 0.75rem; color: rgba(253,240,232,0.85); margin-top: 1px; }
+#btn-home {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+#btn-home:hover { background: rgba(255,255,255,0.2); }
+#progress-bar-wrap { position: sticky; top: 60px; z-index: 99; background: white; border-bottom: 1px solid var(--border); padding: 8px 24px; display: flex; align-items: center; gap: 12px; }
+#progress-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+#progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid)); border-radius: 4px; transition: width 0.5s ease; }
+#progress-label { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+
+/* HOME */
+#home { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+.home-hero { text-align: center; margin-bottom: 48px; }
+.home-hero h2 { font-size: 2rem; color: var(--blue-dark); margin-bottom: 12px; }
+.home-hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+.home-hero .badge { display: inline-block; background: var(--amber-light); color: #2d6560; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 16px; }
+.modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.module-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--blue-mid);
+}
+.module-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--blue-light); }
+.module-card.completed::before { background: var(--green); }
+.module-card.in-progress::before { background: var(--amber); }
+.module-num { font-size: 0.75rem; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.module-card h3 { font-size: 1rem; color: var(--blue-dark); margin-bottom: 8px; line-height: 1.4; }
+.module-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; }
+.module-meta { display: flex; align-items: center; justify-content: space-between; }
+.module-status { font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 12px; }
+.status-new { background: var(--bg); color: var(--text-muted); }
+.status-progress { background: var(--amber-light); color: #2d6560; }
+.status-done { background: var(--green-light); color: #14532d; }
+.module-time { font-size: 0.78rem; color: var(--text-muted); }
+
+/* MODULE VIEW */
+#module-view { max-width: 900px; margin: 0 auto; padding: 32px 20px; display: none; }
+.module-header { margin-bottom: 32px; }
+.module-header .mod-tag { font-size: 0.75rem; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.05em; }
+.module-header h2 { font-size: 1.6rem; color: var(--blue-dark); margin: 6px 0 10px; }
+.module-header .mod-desc { color: var(--text-muted); font-size: 0.95rem; }
+.section-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+.section-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.section-tab:hover { border-color: var(--blue-light); color: var(--blue-mid); }
+.section-tab.active { background: var(--blue-dark); border-color: var(--blue-dark); color: white; }
+.section-tab.done { border-color: var(--green); color: var(--green); }
+.section-tab.done.active { background: var(--green); border-color: var(--green); color: white; }
+
+/* CONTENT BLOCKS */
+.content-block { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 20px; }
+.content-block h3 { font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--bg); }
+.content-block h4 { font-size: 0.95rem; color: var(--blue-dark); margin: 18px 0 8px; font-weight: 600; }
+.content-block p { margin-bottom: 12px; font-size: 0.95rem; }
+.content-block ul, .content-block ol { padding-left: 20px; margin-bottom: 12px; }
+.content-block li { font-size: 0.95rem; margin-bottom: 6px; }
+.info-box { background: #fdf0e8; border-left: 4px solid var(--blue-mid); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.info-box strong { color: var(--blue-dark); display: block; margin-bottom: 4px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.warning-box { background: var(--amber-light); border-left: 4px solid var(--amber); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning-box strong { color: #2d6560; display: block; margin-bottom: 4px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.success-box { background: var(--green-light); border-left: 4px solid var(--green); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.example-box { background: #fafafa; border: 1.5px dashed var(--border); border-radius: 8px; padding: 16px; margin: 16px 0; }
+.example-box .ex-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+
+/* GRADE BADGES */
+.grade { display: inline-block; padding: 3px 10px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; }
+.grade-ig { background: var(--red-light); color: var(--red); }
+.grade-g { background: var(--green-light); color: var(--green); }
+.grade-vg { background: #fdf0e8; color: var(--blue-mid); }
+
+/* MATRIX */
+.matrix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 16px 0; }
+.matrix-table th { background: var(--blue-dark); color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+.matrix-table th.ig { background: #9f1239; }
+.matrix-table th.g { background: #15803d; }
+.matrix-table th.vg { background: #457E7B; }
+.matrix-table td { padding: 10px 12px; border: 1px solid var(--border); vertical-align: top; }
+.matrix-table tr:hover td { background: #fdf8f5; }
+.matrix-table td.criteria-name { font-weight: 600; color: var(--blue-dark); background: #fdf8f5; }
+
+/* EXERCISES */
+.exercise-block { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); border: 2px solid #fad9c4; margin-bottom: 20px; }
+.exercise-block .ex-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.exercise-block .ex-icon { width: 36px; height: 36px; background: #fad9c4; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.exercise-block .ex-title { font-size: 1.05rem; font-weight: 600; color: var(--blue-dark); }
+.exercise-block .ex-subtitle { font-size: 0.82rem; color: var(--text-muted); }
+.quiz-option {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+  cursor: pointer; margin-bottom: 8px; transition: all 0.15s; background: white;
+}
+.quiz-option:hover { border-color: var(--blue-light); background: #fdf6f0; }
+.quiz-option.correct { border-color: var(--green); background: var(--green-light); }
+.quiz-option.wrong { border-color: var(--red); background: var(--red-light); }
+.quiz-option.selected { border-color: var(--blue-mid); background: #fdf0e8; }
+.quiz-option .opt-marker { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.quiz-option.correct .opt-marker { background: var(--green); border-color: var(--green); color: white; }
+.quiz-option.wrong .opt-marker { background: var(--red); border-color: var(--red); color: white; }
+.quiz-option.selected .opt-marker { background: var(--blue-mid); border-color: var(--blue-mid); color: white; }
+.quiz-option p { font-size: 0.9rem; }
+.quiz-feedback { margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 0.9rem; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-light); color: #14532d; }
+.quiz-feedback.wrong { background: var(--red-light); color: #7f1d1d; }
+
+/* REFLECTION */
+.reflection-block { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); border-left: 4px solid var(--amber); margin-bottom: 20px; }
+.reflection-block .ref-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 600; color: #2d6560; font-size: 0.9rem; }
+.reflection-block textarea {
+  width: 100%; min-height: 100px; padding: 12px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-family: inherit; font-size: 0.9rem; resize: vertical;
+  transition: border-color 0.15s; background: #fffbf3;
+}
+.reflection-block textarea:focus { outline: none; border-color: var(--amber); }
+.reflection-block .ref-save-btn {
+  margin-top: 8px; padding: 8px 18px; background: var(--amber); color: white;
+  border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  transition: background 0.2s;
+}
+.reflection-block .ref-save-btn:hover { background: #3d726b; }
+.reflection-block .saved-indicator { color: var(--green); font-size: 0.82rem; margin-top: 6px; display: none; }
+
+/* CASE / DECISION */
+.case-block { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); border-left: 4px solid #457E7B; margin-bottom: 20px; }
+.case-block .case-header { font-size: 0.82rem; font-weight: 700; color: #457E7B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+.case-block .case-scenario { background: #f0f8f7; border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 0.9rem; }
+.decision-btn {
+  display: block; width: 100%; text-align: left; padding: 12px 16px;
+  border: 1.5px solid var(--border); border-radius: 8px; background: white;
+  cursor: pointer; margin-bottom: 8px; font-size: 0.9rem; font-family: inherit;
+  transition: all 0.15s;
+}
+.decision-btn:hover { border-color: #457E7B; background: #f0f8f7; }
+.decision-btn.chosen-right { border-color: var(--green); background: var(--green-light); color: #14532d; font-weight: 600; }
+.decision-btn.chosen-wrong { border-color: var(--red); background: var(--red-light); color: #7f1d1d; }
+.case-result { margin-top: 14px; padding: 14px; border-radius: 8px; font-size: 0.9rem; display: none; }
+.case-result.show { display: block; }
+.case-result.correct { background: var(--green-light); border: 1px solid #86efac; }
+.case-result.wrong { background: var(--red-light); border: 1px solid #fca5a5; }
+
+/* DRAG / SORT EXERCISE */
+.sort-items { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.sort-item {
+  padding: 10px 14px; background: #fdf6f0; border: 1.5px solid #f9d4b8;
+  border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.15s;
+  user-select: none;
+}
+.sort-item:hover { background: #fde8d4; }
+.sort-item.selected { background: var(--blue-dark); color: white; border-color: var(--blue-dark); }
+.sort-item.correct { background: var(--green-light); border-color: #86efac; color: #14532d; }
+.sort-item.incorrect { background: var(--red-light); border-color: #fca5a5; color: #7f1d1d; }
+.drop-targets { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+.drop-target {
+  flex: 1; min-width: 140px; min-height: 80px; border: 2px dashed var(--border);
+  border-radius: 8px; padding: 10px; font-size: 0.82rem;
+}
+.drop-target .dt-label { font-weight: 600; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; text-align: center; }
+.dropped-tag { display: inline-block; padding: 4px 10px; background: #fdf0e8; border: 1px solid #f9d4b8; border-radius: 12px; font-size: 0.82rem; margin: 3px; cursor: pointer; }
+
+/* NAVIGATION BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+.btn { padding: 10px 22px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+.btn-primary { background: var(--blue-dark); color: white; }
+.btn-primary:hover { background: var(--blue-mid); }
+.btn-secondary { background: white; color: var(--text-muted); border: 1.5px solid var(--border); }
+.btn-secondary:hover { border-color: var(--blue-light); color: var(--blue-mid); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { background: #15803d; }
+
+/* COMPLETION */
+#completion-view { max-width: 600px; margin: 60px auto; padding: 20px; text-align: center; display: none; }
+.completion-card { background: white; border-radius: var(--radius); padding: 48px 40px; box-shadow: var(--shadow-lg); }
+.completion-icon { font-size: 4rem; margin-bottom: 20px; }
+.completion-card h2 { font-size: 1.8rem; color: var(--blue-dark); margin-bottom: 12px; }
+.completion-card p { color: var(--text-muted); margin-bottom: 24px; }
+.completion-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.stat-box { background: var(--bg); border-radius: 8px; padding: 16px; }
+.stat-num { font-size: 1.8rem; font-weight: 700; color: var(--blue-dark); }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: white; border-radius: var(--radius); padding: 32px; max-width: 560px; width: 100%; box-shadow: var(--shadow-lg); max-height: 85vh; overflow-y: auto; }
+.modal-box h3 { font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 14px; }
+.modal-close { float: right; background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-muted); margin-top: -4px; }
+
+/* PROGRESS DOTS */
+.section-progress { display: flex; gap: 6px; margin-bottom: 20px; }
+.sdot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
+.sdot.active { background: var(--blue-mid); }
+
+.sdot.done { background: var(--green); }
+
+/* FEEDBACK REWRITE */
+.feedback-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.fb-box { border-radius: 8px; padding: 14px; }
+.fb-box.bad { background: #fff1f2; border: 1px solid #fecdd3; }
+.fb-box.good { background: var(--green-light); border: 1px solid #86efac; }
+.fb-box .fb-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.fb-box.bad .fb-label { color: var(--red); }
+.fb-box.good .fb-label { color: var(--green); }
+.fb-box p { font-size: 0.88rem; }
+
+/* TOOLTIP */
+.tooltip { position: relative; display: inline-block; border-bottom: 1px dashed var(--blue-mid); cursor: help; }
+.tooltip::after {
+  content: attr(data-tip);
+  position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+  background: #333; color: white; padding: 6px 10px; border-radius: 6px;
+  font-size: 0.78rem; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; z-index: 50;
+}
+.tooltip:hover::after { opacity: 1; }
+
+@media (max-width: 600px) {
+  .modules-grid { grid-template-columns: 1fr; }
+  .feedback-compare { grid-template-columns: 1fr; }
+  .completion-stats { grid-template-columns: 1fr; }
+  #topbar h1 { font-size: 0.9rem; }
+}
+
+/* SCROLL ANIMATE */
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* LOGIN */
+#login-view {
+  position: fixed; inset: 0; z-index: 500;
+  background: linear-gradient(135deg, #8b3a0d 0%, #B95822 50%, #e86e2c 100%);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  background: white; border-radius: 16px; padding: 48px 40px;
+  max-width: 440px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  text-align: center;
+}
+.login-logo { font-size: 3.2rem; margin-bottom: 16px; }
+.login-card h2 { font-size: 1.5rem; color: #8b3a0d; margin-bottom: 6px; }
+.login-card .login-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 32px; }
+.login-form { text-align: left; }
+.login-form label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; margin-top: 16px; }
+.login-form input {
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+  transition: border-color 0.15s; background: #fdf8f5;
+}
+.login-form input:focus { outline: none; border-color: #B95822; background: white; }
+.login-btn {
+  width: 100%; margin-top: 24px; padding: 13px;
+  background: linear-gradient(135deg, #8b3a0d, #B95822);
+  color: white; border: none; border-radius: 8px;
+  font-size: 1rem; font-weight: 700; cursor: pointer;
+  transition: opacity 0.2s; letter-spacing: 0.01em;
+}
+.login-btn:hover { opacity: 0.88; }
+#topbar-name { font-size: 0.78rem; color: rgba(253,240,232,0.7); margin-top: 1px; }
+
+/* DIPLOMA */
+#diploma-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.65); display: none;
+  align-items: center; justify-content: center;
+  padding: 20px; overflow-y: auto;
+}
+#diploma-overlay.open { display: flex; }
+.diploma-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 760px; width: 100%; }
+.diploma-actions { display: flex; gap: 10px; }
+.diploma {
+  background: white; width: 100%; padding: 52px 56px;
+  border-radius: 4px; position: relative; overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+/* Decorative frame */
+.diploma::before {
+  content: '';
+  position: absolute; inset: 14px;
+  border: 2.5px solid #B95822;
+  border-radius: 2px; pointer-events: none;
+}
+.diploma::after {
+  content: '';
+  position: absolute; inset: 19px;
+  border: 1px solid rgba(185,88,34,0.35);
+  border-radius: 1px; pointer-events: none;
+}
+.diploma-corner {
+  position: absolute; width: 42px; height: 42px;
+  border-color: #8b3a0d;
+}
+.diploma-corner.tl { top: 8px; left: 8px; border-top: 3px solid; border-left: 3px solid; }
+.diploma-corner.tr { top: 8px; right: 8px; border-top: 3px solid; border-right: 3px solid; }
+.diploma-corner.bl { bottom: 8px; left: 8px; border-bottom: 3px solid; border-left: 3px solid; }
+.diploma-corner.br { bottom: 8px; right: 8px; border-bottom: 3px solid; border-right: 3px solid; }
+.diploma-body { text-align: center; position: relative; z-index: 1; }
+.diploma-issued { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #B95822; margin-bottom: 12px; }
+.diploma-course { font-size: 1.35rem; color: #8b3a0d; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.01em; }
+.diploma-org { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 28px; }
+.diploma-presents { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; }
+.diploma-name { font-size: 2.2rem; color: #8b3a0d; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
+.diploma-school { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 28px; }
+.diploma-divider { width: 80px; height: 3px; background: linear-gradient(90deg, #8b3a0d, #e86e2c); margin: 0 auto 24px; border-radius: 2px; }
+.diploma-desc { font-size: 0.88rem; color: #444; line-height: 1.7; max-width: 460px; margin: 0 auto 28px; }
+.diploma-meta { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding-top: 20px; border-top: 1px solid #f0e0d0; }
+.diploma-date-wrap { text-align: left; }
+.diploma-date-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #aaa; margin-bottom: 4px; }
+.diploma-date { font-size: 0.88rem; color: #555; font-weight: 600; }
+.diploma-seal { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #8b3a0d, #B95822); display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.diploma-seal span { color: white; font-size: 0.55rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; display: block; text-align: center; line-height: 1.3; }
+.diploma-modules { margin: 20px 0; text-align: left; }
+.diploma-modules-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #B95822; margin-bottom: 10px; text-align: center; }
+.diploma-modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.diploma-module-item { font-size: 0.78rem; color: #555; padding: 3px 0; border-bottom: 1px dotted #e4d5c8; }
+.diploma-module-item::before { content: '✓ '; color: #B95822; font-weight: 700; }
+
+/* PRINT */
+@media print {
+  #login-view, #topbar, #progress-bar-wrap, #home,
+  #module-view, #completion-view, .modal-overlay,
+  .diploma-actions, #diploma-overlay > *:not(.diploma-wrap) { display: none !important; }
+  #diploma-overlay { display: block !important; position: static !important;
+    background: white !important; padding: 0 !important; overflow: visible !important; }
+  .diploma-wrap { box-shadow: none !important; max-width: 100% !important; }
+  .diploma { box-shadow: none !important; padding: 40px !important; }
+  .diploma-actions { display: none !important; }
+  body { background: white !important; margin: 0 !important; }
+  @page { margin: 0; size: A4 landscape; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN VIEW -->
+<div id="login-view">
+  <div class="login-card fade-in">
+    <div class="login-logo">🎓</div>
+    <h2>Betyg och bedömning i YH</h2>
+    <p class="login-sub">Interaktiv utbildning för YH-lärare · 7 moduler · ~90 min</p>
+    <div class="login-form">
+      <label for="login-name">Ditt namn</label>
+      <input type="text" id="login-name" placeholder="Förnamn Efternamn" autocomplete="name">
+      <label for="login-org">Organisation / Företag <span style="font-weight:400;text-transform:none;letter-spacing:0;">(valfritt)</span></label>
+      <input type="text" id="login-org" placeholder="t.ex. KYH">
+      <button class="login-btn" onclick="doLogin()">Starta utbildningen →</button>
+    </div>
+  </div>
+</div>
+
+<div id="topbar">
+  <div>
+    <div style="font-weight:700;font-size:1rem;">Betyg och bedömning i YH</div>
+    <div id="topbar-name"></div>
+  </div>
+  <button id="btn-home" onclick="showHome()">&#8962; Hem</button>
+</div>
+
+<div id="progress-bar-wrap">
+  <div id="progress-bar-track"><div id="progress-bar-fill" style="width:0%"></div></div>
+  <span id="progress-label">0 av 7 moduler klara</span>
+</div>
+
+<!-- HOME VIEW -->
+<div id="home">
+  <div class="home-hero fade-in">
+    <div class="badge">YH-utbildning · 7 moduler · ~90 min</div>
+    <h2>Betyg och bedömning i YH</h2>
+    <p>En praktisk, interaktiv utbildning för dig som undervisar inom Yrkeshögskolan. Lär dig bedöma rättssäkert, likvärdigt och transparent – i linje med MYH:s riktlinjer.</p>
+  </div>
+  <div class="modules-grid" id="modules-grid"></div>
+</div>
+
+<!-- MODULE VIEW -->
+<div id="module-view">
+  <div class="module-header">
+    <div class="mod-tag" id="mod-tag"></div>
+    <h2 id="mod-title"></h2>
+    <p class="mod-desc" id="mod-desc"></p>
+  </div>
+  <div class="section-tabs" id="section-tabs"></div>
+  <div id="section-content" class="fade-in"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" id="btn-prev" onclick="prevSection()">← Föregående</button>
+    <span id="section-counter" style="font-size:0.85rem;color:var(--text-muted)"></span>
+    <button class="btn btn-primary" id="btn-next" onclick="nextSection()">Nästa →</button>
+  </div>
+</div>
+
+<!-- COMPLETION VIEW -->
+<div id="completion-view">
+  <div class="completion-card fade-in">
+    <div class="completion-icon">🎓</div>
+    <h2>Grattis! Du har slutfört utbildningen.</h2>
+    <p>Du har nu gått igenom alla sju moduler om betyg och bedömning i YH. Du är väl rustad att bedöma rättssäkert, likvärdigt och transparent.</p>
+    <div class="completion-stats">
+      <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">Moduler avslutade</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-reflections">0</div><div class="stat-label">Reflektioner sparade</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-exercises">0</div><div class="stat-label">Övningar genomförda</div></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="openDiploma()">🏅 Visa mitt diplom</button>
+      <button class="btn btn-secondary" onclick="showHome()">Tillbaka till start</button>
+    </div>
+  </div>
+</div>
+
+<!-- DIPLOMA OVERLAY -->
+<div id="diploma-overlay">
+  <div class="diploma-wrap">
+    <div class="diploma-actions">
+      <button class="btn btn-primary" onclick="window.print()" style="background:linear-gradient(135deg,#8b3a0d,#B95822);">🖨️ Skriv ut / Spara som PDF</button>
+      <button class="btn btn-secondary" style="background:rgba(255,255,255,0.15);color:white;border-color:rgba(255,255,255,0.3);" onclick="closeDiploma()">✕ Stäng</button>
+    </div>
+    <div class="diploma">
+      <div class="diploma-corner tl"></div>
+      <div class="diploma-corner tr"></div>
+      <div class="diploma-corner bl"></div>
+      <div class="diploma-corner br"></div>
+      <div class="diploma-body">
+        <div class="diploma-issued">Intyg om genomförd utbildning</div>
+        <div class="diploma-course">Betyg och bedömning i YH</div>
+        <div class="diploma-org">Interaktiv utbildning för YH-lärare · Myndigheten för yrkeshögskolan</div>
+        <div class="diploma-divider"></div>
+        <div class="diploma-presents">Detta intygar att</div>
+        <div class="diploma-name" id="diploma-name">—</div>
+        <div class="diploma-school" id="diploma-school"></div>
+        <div class="diploma-desc">
+          har genomfört samtliga sju moduler i utbildningen <em>Betyg och bedömning i YH</em>
+          och därigenom fördjupat sina kunskaper om rättssäker, likvärdig och transparent
+          bedömning i enlighet med MYH:s riktlinjer.
+        </div>
+        <div class="diploma-modules">
+          <div class="diploma-modules-title">Genomförda moduler</div>
+          <div class="diploma-modules-grid" id="diploma-modules-list"></div>
+        </div>
+        <div class="diploma-meta">
+          <div class="diploma-date-wrap">
+            <div class="diploma-date-label">Datum</div>
+            <div class="diploma-date" id="diploma-date"></div>
+          </div>
+          <div class="diploma-seal">
+            <span>YH</span>
+            <span>Godkänd</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const MODULES = [
+  {
+    id: 1,
+    title: "Grunder i betyg och bedömning inom YH",
+    desc: "Förstå MYH:s syn på rättssäkerhet, skillnaden mellan bedömning och betyg, och vanliga fallgropar.",
+    time: "~12 min",
+    sections: [
+      {
+        id: "intro",
+        title: "Vad är betyg och bedömning?",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Bedömning och betyg – två olika saker</h3>
+            <p>Inom Yrkeshögskolan används ofta orden "bedömning" och "betyg" som om de vore synonymer – men de är det inte. Det är viktigt att skilja dem åt.</p>
+            <div class="info-box">
+              <strong>Bedömning</strong>
+              En process där läraren samlar in och tolkar information om vad den studerande kan och förstår. Bedömning är ett verktyg – det kan vara formativt (för lärande) eller summativt (för betygssättning).
+            </div>
+            <div class="info-box">
+              <strong>Betyg</strong>
+              En formell, summativ värdering som dokumenterar den studerandes kunskapsnivå i förhållande till kursmålen. Betyget är ett beslut – det kommunicerar ett utfall.
+            </div>
+            <h4>Tre betygsgrader inom YH</h4>
+            <p>Yrkeshögskolan använder tre betygsgrader:</p>
+            <ul>
+              <li><span class="grade grade-vg">VG</span> <strong>Väl Godkänd</strong> – Studeranden uppfyller kraven på ett väl godkänt sätt</li>
+              <li><span class="grade grade-g">G</span> <strong>Godkänd</strong> – Studeranden uppfyller minimikraven</li>
+              <li><span class="grade grade-ig">IG</span> <strong>Icke Godkänd</strong> – Studeranden uppfyller inte minimikraven</li>
+            </ul>
+            <div class="warning-box">
+              <strong>Viktigt att tänka på</strong>
+              Betyget IG är inte ett "straff" – det är information. Det signalerar att studeranden behöver mer tid och stöd för att nå målen. Kommunicera detta professionellt och respektfullt.
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>MYH:s tre grundprinciper</h3>
+            <p>Myndigheten för yrkeshögskolan (MYH) betonar tre principer som ska genomsyra all bedömning och betygssättning:</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin:16px 0;">
+              <div style="background:#fdf0e8;border-radius:10px;padding:18px;text-align:center;">
+                <div style="font-size:1.8rem;margin-bottom:8px;">⚖️</div>
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:6px;">Rättssäkerhet</div>
+                <div style="font-size:0.85rem;color:var(--text-muted);">Studeranden har rätt till en förutsägbar och rättvis prövning baserad på tydliga kriterier.</div>
+              </div>
+              <div style="background:#f0faf5;border-radius:10px;padding:18px;text-align:center;">
+                <div style="font-size:1.8rem;margin-bottom:8px;">🎯</div>
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:6px;">Likvärdighet</div>
+                <div style="font-size:0.85rem;color:var(--text-muted);">Samma prestation ska bedömas på samma sätt, oavsett vem som är lärare.</div>
+              </div>
+              <div style="background:#fffbf3;border-radius:10px;padding:18px;text-align:center;">
+                <div style="font-size:1.8rem;margin-bottom:8px;">🔍</div>
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:6px;">Transparens</div>
+                <div style="font-size:0.85rem;color:var(--text-muted);">Studeranden ska förstå vad som bedöms, hur och varför.</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "fallgropar",
+        title: "Vanliga fallgropar",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Vanliga fallgropar i YH-bedömning</h3>
+            <p>Även erfarna lärare kan hamna i dessa fällor. Att känna till dem är första steget mot rättssäkrare bedömning.</p>
+            <h4>1. Att bedöma ansträngning istället för lärande</h4>
+            <p>Studenten var ambitiös, lade ner mycket tid, var aktiv på lektionerna... men uppnår inte läranderesultaten. Betyget ska spegla <em>vad</em> studenten kan, inte <em>hur hårt</em> de kämpade.</p>
+            <div class="example-box">
+              <div class="ex-label">Exempel</div>
+              <p><strong>Fel:</strong> "Erik la ner enormt mycket tid på uppgiften, jag kan inte ge IG."</p>
+              <p><strong>Rätt:</strong> "Eriks prestation uppfyller inte kriteriet [X]. Han behöver komplettera eller göra om uppgiften."</p>
+            </div>
+            <h4>2. Att låta helhetsintrycket påverka enskilda delmoment</h4>
+            <p>Det är lätt att en generellt stark student automatiskt bedöms högt även i delar där prestationen faktiskt inte räcker – och tvärtom att en student som kämpar bedöms extra hårt på ett delmoment. Varje kriterium ska bedömas för sig, utifrån vad studenten faktiskt visat.</p>
+            <h4>3. Att använda aktivitet som bedömningsgrund</h4>
+            <p>Närvaro, deltagande i diskussioner och visad entusiasm är värdefulla – men de kan inte ersätta bevis på att läranderesultaten uppnåtts.</p>
+            <div class="warning-box">
+              <strong>MYH:s ståndpunkt</strong>
+              Bedömningen ska baseras på <em>läranderesultat</em> – de kunskaper, färdigheter och kompetenser som kursplanen definierar. Inga andra faktorer.
+            </div>
+            <h4>4. Otydliga eller saknade bedömningskriterier</h4>
+            <p>Om läraren inte formulerat tydliga kriterier i förväg riskerar bedömningen att bli godtycklig. Studeranden kan då inte förutse vad som krävs – vilket är en rättssäkerhetsfråga.</p>
+            <h4>5. Att inte dokumentera beslutsgrunden</h4>
+            <p>Betyg ska kunna motiveras och följas upp. Om en studerande överklagar måste du kunna visa <em>varför</em> du satte det betyget du satte.</p>
+          </div>
+        `
+      },
+      {
+        id: "quiz1",
+        title: "Quiz: Grunderna",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">❓</div>
+              <div><div class="ex-title">Testa dina kunskaper</div><div class="ex-subtitle">Välj det bästa svaret</div></div>
+            </div>
+            <div id="q1-wrap">
+              <p style="margin-bottom:14px;font-weight:600;">En studerande har lagt ner stor ansträngning i kursen och deltagit aktivt på alla lektioner, men har inte uppnått ett av de tre läranderesultaten. Vad ska betyget bli?</p>
+              <div class="quiz-option" onclick="answerQuiz('q1',this,false,'q1-fb')">
+                <div class="opt-marker">A</div>
+                <p>G, eftersom ansträngning och deltagande ska vägas in</p>
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1',this,false,'q1-fb')">
+                <div class="opt-marker">B</div>
+                <p>G, om de andra läranderesultaten uppnås på VG-nivå</p>
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1',this,true,'q1-fb')">
+                <div class="opt-marker">C</div>
+                <p>IG, eftersom alla läranderesultat måste vara uppnådda för betyget G</p>
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1',this,false,'q1-fb')">
+                <div class="opt-marker">D</div>
+                <p>VG, för att premiera det starka engagemanget</p>
+              </div>
+              <div class="quiz-feedback" id="q1-fb"></div>
+            </div>
+          </div>
+          <div class="exercise-block" style="margin-top:20px;">
+            <div class="ex-header">
+              <div class="ex-icon">❓</div>
+              <div><div class="ex-title">Fråga 2</div></div>
+            </div>
+            <p style="margin-bottom:14px;font-weight:600;">Vilken av dessa principer innebär att samma prestation ska bedömas på samma sätt oavsett lärare?</p>
+            <div class="quiz-option" onclick="answerQuiz('q2',this,false,'q2-fb')">
+              <div class="opt-marker">A</div>
+              <p>Rättssäkerhet</p>
+            </div>
+            <div class="quiz-option" onclick="answerQuiz('q2',this,true,'q2-fb')">
+              <div class="opt-marker">B</div>
+              <p>Likvärdighet</p>
+            </div>
+            <div class="quiz-option" onclick="answerQuiz('q2',this,false,'q2-fb')">
+              <div class="opt-marker">C</div>
+              <p>Transparens</p>
+            </div>
+            <div class="quiz-feedback" id="q2-fb"></div>
+          </div>
+        `
+      },
+      {
+        id: "ref1",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Vilken av fallgroparna känner du igen från din egen undervisning eller från kollegor? Hur kan du konkret motverka den i din kurs?",
+        key: "mod1_ref1"
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Läranderesultat som grund för bedömning",
+    desc: "Hur man tolkar och konkretiserar läranderesultat – från kursplan till bedömning.",
+    time: "~14 min",
+    sections: [
+      {
+        id: "lr-intro",
+        title: "Vad är ett läranderesultat?",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Läranderesultat – kärnan i YH-bedömning</h3>
+            <p>Alla kurser inom YH har <strong>läranderesultat</strong> som definierar vad den studerande ska kunna göra, veta eller förstå efter avslutad kurs. Det är dessa – och bara dessa – som utgör grunden för betygssättning.</p>
+            <div class="info-box">
+              <strong>Definition (MYH)</strong>
+              Läranderesultat beskriver vad den studerande förväntas <em>kunna demonstrera</em> efter avslutad kurs – i termer av kunskaper, färdigheter och kompetenser.
+            </div>
+            <h4>Läranderesultat är inte samma som undervisningsmål</h4>
+            <p>Det är en viktig distinktion:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+              <div style="background:#fff1f2;border-radius:8px;padding:14px;">
+                <div style="font-weight:700;color:var(--red);margin-bottom:6px;font-size:0.85rem;">UNDERVISNINGSMÅL (läraren)</div>
+                <p style="font-size:0.88rem;">Fokuserar på <em>vad läraren ska göra</em>: genomgångar, övningar, diskussioner. Kan inte direkt bedömas.</p>
+                <div class="example-box" style="margin-top:10px;"><p style="font-size:0.85rem;font-style:italic;">"Studenterna ska gå igenom byggprocessens faser och delta i ett projekteringsarbete."</p></div>
+              </div>
+              <div style="background:var(--green-light);border-radius:8px;padding:14px;">
+                <div style="font-weight:700;color:var(--green);margin-bottom:6px;font-size:0.85rem;">LÄRANDERESULTAT (studenten)</div>
+                <p style="font-size:0.88rem;">Fokuserar på <em>vad studenten ska kunna</em> vid kursens slut. Konkret, bedömbart och synligt.</p>
+                <div class="example-box" style="margin-top:10px;"><p style="font-size:0.85rem;font-style:italic;">"Studenten ska kunna beskriva byggprocessens faser och redogöra för varje aktörs ansvar."</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Tre dimensioner av läranderesultat</h3>
+            <p>Läranderesultat inom YH täcker tre dimensioner, enligt <span class="tooltip" data-tip="Europeisk referensram för kvalifikationer">EQF</span>-ramverket:</p>
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+              <tr style="background:var(--blue-dark);color:white;">
+                <th style="padding:10px;">Dimension</th><th style="padding:10px;">Innebär</th><th style="padding:10px;">Exempel</th>
+              </tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);font-weight:600;">Kunskaper</td><td style="padding:10px;border:1px solid var(--border);">Fakta, förståelse, principer</td><td style="padding:10px;border:1px solid var(--border);">Redogöra för, beskriva, förklara</td></tr>
+              <tr style="background:#fdf8f5;"><td style="padding:10px;border:1px solid var(--border);font-weight:600;">Färdigheter</td><td style="padding:10px;border:1px solid var(--border);">Praktisk tillämpning, hantverk</td><td style="padding:10px;border:1px solid var(--border);">Utföra, använda, tillämpa, lösa</td></tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);font-weight:600;">Ansvar och självständighet</td><td style="padding:10px;border:1px solid var(--border);">Autonomi, ansvar, omdöme</td><td style="padding:10px;border:1px solid var(--border);">Värdera, ta ansvar, anpassa, välja</td></tr>
+            </table>
+          </div>
+        `
+      },
+      {
+        id: "lr-identify",
+        title: "Vad går att bedöma?",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Att konkretisera vad som faktiskt bedöms</h3>
+            <p>Läranderesultat är ofta skrivna på en abstrakt nivå. Läraren behöver <em>konkretisera</em> dem – bryta ned till vad studenten faktiskt ska visa upp.</p>
+            <div class="example-box">
+              <div class="ex-label">Från kursplan – läranderesultat</div>
+              <p style="font-weight:600;font-size:1rem;">"Den studerande ska ha kunskaper om lagar och regler inom området samt förmåga att tillämpa dessa i yrkesutövningen."</p>
+            </div>
+            <h4>Nedbrytning: Vad ska studenten faktiskt visa?</h4>
+            <ol>
+              <li><strong>Kunskaper:</strong> Studenten kan korrekt redogöra för relevanta lagar och föreskrifter (t.ex. Arbetsmiljölagen, Diskrimineringslagen)</li>
+              <li><strong>Tillämpning:</strong> Studenten kan i ett givet case-scenario identifiera vilken lagstiftning som är relevant och motivera varför</li>
+              <li><strong>Yrkesutövning:</strong> Studenten kan i en simulerad arbetsuppgift agera lagenligt och motivera sina val</li>
+            </ol>
+            <div class="info-box">
+              <strong>Princip</strong>
+              För varje läranderesultat: Fråga dig "Hur vet jag att studenten kan detta?" Det svaret är ditt bedömningsunderlag.
+            </div>
+            <h4>Vanliga verb i läranderesultat och deras bedömningsimplikationer</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-top:12px;">
+              <tr style="background:var(--blue-dark);color:white;">
+                <th style="padding:8px 10px;">Verb</th><th style="padding:8px 10px;">Nivå</th><th style="padding:8px 10px;">Lämplig bedömningsform</th>
+              </tr>
+              <tr><td style="padding:8px 10px;border:1px solid var(--border);">Redogöra för, beskriva</td><td style="padding:8px 10px;border:1px solid var(--border);">Kunskap</td><td style="padding:8px 10px;border:1px solid var(--border);">Skriftlig uppgift, muntlig presentation</td></tr>
+              <tr style="background:#fdf8f5;"><td style="padding:8px 10px;border:1px solid var(--border);">Tillämpa, utföra</td><td style="padding:8px 10px;border:1px solid var(--border);">Färdighet</td><td style="padding:8px 10px;border:1px solid var(--border);">Praktisk uppgift, case, laboration</td></tr>
+              <tr><td style="padding:8px 10px;border:1px solid var(--border);">Analysera, värdera</td><td style="padding:8px 10px;border:1px solid var(--border);">Ansvar och självständighet</td><td style="padding:8px 10px;border:1px solid var(--border);">Rapport, reflektion, diskussion</td></tr>
+              <tr style="background:#fdf8f5;"><td style="padding:8px 10px;border:1px solid var(--border);">Ta ansvar, samordna</td><td style="padding:8px 10px;border:1px solid var(--border);">Ansvar och självständighet</td><td style="padding:8px 10px;border:1px solid var(--border);">Projektarbete, observation</td></tr>
+            </table>
+          </div>
+        `
+      },
+      {
+        id: "lr-exercise",
+        title: "Övning: Identifiera bedömningsbara delar",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">🔍</div>
+              <div><div class="ex-title">Övning: Vad kan bedömas?</div><div class="ex-subtitle">Klicka på de påståenden som är bedömningsbara läranderesultat</div></div>
+            </div>
+            <p style="margin-bottom:14px;color:var(--text-muted);font-size:0.9rem;">Nedanstående är hämtade från en kursplan i "Ledarskap och organisation". Klicka på de som faktiskt <strong>kan bedömas</strong> – dvs. som är konkreta och mätbara.</p>
+            <div id="lr-items" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+            <button class="btn btn-primary" onclick="checkLRItems()" id="lr-check-btn" style="margin-top:8px;">Kontrollera mina svar</button>
+            <div id="lr-result" style="margin-top:14px;display:none;"></div>
+          </div>
+        `
+      },
+      {
+        id: "ref2",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Välj ett läranderesultat från en kurs du undervisar i. Hur konkretiserar du det till bedömningsbara delar? Vad är svårast att mäta?",
+        key: "mod2_ref1"
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Bedömningskriterier och bedömningsmatriser",
+    desc: "Bygg effektiva matriser kopplade till betygsnivåer och läranderesultat.",
+    time: "~15 min",
+    sections: [
+      {
+        id: "criteria",
+        title: "Vad är ett bedömningskriterium?",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Bedömningskriterier – läranderesultatens operationalisering</h3>
+            <p>Ett <strong>bedömningskriterium</strong> beskriver vad som krävs av en studerandes prestation för att den ska nå en viss betygsnivå. Det är bryggan mellan läranderesultatet (abstraktet) och betyget (beslutet).</p>
+            <div class="info-box">
+              <strong>Ett bra bedömningskriterium är:</strong>
+              <ul style="margin-top:6px;padding-left:18px;">
+                <li>Kopplat till ett specifikt läranderesultat</li>
+                <li>Observerbart – det beskriver vad studenten <em>gör</em> eller <em>visar</em></li>
+                <li>Tydligt avgränsat – inga "och/eller"-konstruktioner</li>
+                <li>Differentierat – beskriver skillnaden mellan G och VG</li>
+              </ul>
+            </div>
+            <h4>Progression: Hur ser skillnaden ut mellan G och VG?</h4>
+            <p>Progression kan uttryckas längs flera dimensioner:</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0;">
+              <div style="background:#fdf8f5;border-radius:8px;padding:12px;border:1px solid var(--border);">
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:4px;font-size:0.85rem;">Komplexitet</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);">G: enkla fall → VG: komplexa, motstridiga situationer</div>
+              </div>
+              <div style="background:#fdf8f5;border-radius:8px;padding:12px;border:1px solid var(--border);">
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:4px;font-size:0.85rem;">Självständighet</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);">G: med viss handledning → VG: autonomt och initiativrikt</div>
+              </div>
+              <div style="background:#fdf8f5;border-radius:8px;padding:12px;border:1px solid var(--border);">
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:4px;font-size:0.85rem;">Precision</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);">G: tillräcklig noggrannhet → VG: konsekvent och träffsäker</div>
+              </div>
+              <div style="background:#fdf8f5;border-radius:8px;padding:12px;border:1px solid var(--border);">
+                <div style="font-weight:700;color:var(--blue-dark);margin-bottom:4px;font-size:0.85rem;">Reflektion</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);">G: beskriver → VG: analyserar och värderar kritiskt</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "matrix",
+        title: "Bedömningsmatriser",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Bedömningsmatrisen – ett centralt verktyg</h3>
+            <p>En bedömningsmatris (rubrik) sammanställer alla bedömningskriterier i ett överskådligt format. Den tydliggör för både lärare och studerande vad som krävs för varje betygsgrad.</p>
+            <h4>Exempel: Matris för skriftlig uppgift i "Byggnadsteknik"</h4>
+            <p style="margin-bottom:12px;font-size:0.85rem;color:var(--text-muted);">Läranderesultat: "Studeranden ska kunna tolka byggritningar och tillämpa relevanta krav ur Boverkets Byggregler (BBR)."</p>
+            <div style="overflow-x:auto;">
+              <table class="matrix-table">
+                <tr>
+                  <th style="min-width:150px;">Kriterium</th>
+                  <th class="ig">IG</th>
+                  <th class="g">G</th>
+                  <th class="vg">VG</th>
+                </tr>
+                <tr>
+                  <td class="criteria-name">Tolkning av byggritning</td>
+                  <td>Kan inte identifiera grundläggande måttsättning, skalor eller beteckningar på ritningen.</td>
+                  <td>Identifierar korrekt mått, skalor och standardbeteckningar på en given plan- eller sektionsritning.</td>
+                  <td>Tolkar ritningen självständigt, uppmärksammar avvikelser och kan motivera vad dessa innebär i praktiken.</td>
+                </tr>
+                <tr>
+                  <td class="criteria-name">Tillämpning av BBR</td>
+                  <td>Saknar koppling till BBR eller hänvisar till fel kapitel.</td>
+                  <td>Identifierar vilket BBR-avsnitt som är relevant för uppgiften och redovisar kravet korrekt.</td>
+                  <td>Tillämpar BBR-kravet på ett specifikt byggfall, motiverar tolkningen och lyfter eventuella tolkningssvårigheter.</td>
+                </tr>
+                <tr>
+                  <td class="criteria-name">Slutsatser och åtgärdsförslag</td>
+                  <td>Slutsatser saknas eller är inte kopplade till ritningen eller BBR.</td>
+                  <td>Drar korrekta slutsatser och föreslår en konkret åtgärd utifrån identifierat krav.</td>
+                  <td>Motiverar åtgärdsförslaget med hänsyn till både tekniska krav och praktiska förutsättningar på byggarbetsplatsen.</td>
+                </tr>
+              </table>
+            </div>
+            <div class="success-box" style="margin-top:16px;">
+              <strong style="color:var(--green);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;">Tips: Del-totalt</strong>
+              <p style="font-size:0.88rem;margin-top:4px;">För betyget <span class="grade grade-g">G</span> ska studenten uppfylla <em>alla</em> G-kriterier. För <span class="grade grade-vg">VG</span> ska alla VG-kriterier uppfyllas. Undvikande formuleringar som "generellt sett" eller "oftast" gör matrisen obrukbar.</p>
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Vanliga misstag i matriser</h3>
+            <div class="warning-box">
+              <strong>Dessa formuleringar ska undvikas</strong>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-top:12px;">
+              <tr style="background:var(--blue-dark);color:white;">
+                <th style="padding:8px 10px;">Problematisk formulering</th><th style="padding:8px 10px;">Varför det är ett problem</th><th style="padding:8px 10px;">Bättre alternativ</th>
+              </tr>
+              <tr><td style="padding:8px 10px;border:1px solid var(--border);">"Visar god förståelse"</td><td style="padding:8px 10px;border:1px solid var(--border);">Subjektivt – vad är "god"?</td><td style="padding:8px 10px;border:1px solid var(--border);">"Kan förklara tre centrala begrepp och ge ett relevant exempel"</td></tr>
+              <tr style="background:#fdf8f5;"><td style="padding:8px 10px;border:1px solid var(--border);">"Lämnar in en komplett rapport"</td><td style="padding:8px 10px;border:1px solid var(--border);">Bedömer aktivitet, inte lärande</td><td style="padding:8px 10px;border:1px solid var(--border);">"Rapporten innehåller en genomförd analys med slutsatser"</td></tr>
+              <tr><td style="padding:8px 10px;border:1px solid var(--border);">"Deltar aktivt"</td><td style="padding:8px 10px;border:1px solid var(--border);">Aktivitetsbedömning</td><td style="padding:8px 10px;border:1px solid var(--border);">"Kan motivera sin synpunkt med ett argument"</td></tr>
+              <tr style="background:#fdf8f5;"><td style="padding:8px 10px;border:1px solid var(--border);">"Bra och väl" (VG)</td><td style="padding:8px 10px;border:1px solid var(--border);">Cirkelreferens – vad är "bra"?</td><td style="padding:8px 10px;border:1px solid var(--border);">Beskriv konkret vad som skiljer VG från G</td></tr>
+            </table>
+          </div>
+        `
+      },
+      {
+        id: "matrix-sim",
+        title: "Simulering: Bygg en matris",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">🔧</div>
+              <div><div class="ex-title">Simulering: Bedöm en matris</div><div class="ex-subtitle">Är dessa kriterier tillräckligt tydliga för rättssäker bedömning?</div></div>
+            </div>
+            <p style="margin-bottom:14px;font-size:0.9rem;">Nedan finns tre G-kriterier för en kurs i "Projektledning". Klicka på varje kriterium för att se om det håller måttet för rättssäker bedömning.</p>
+            <div id="matrix-items" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+        `
+      },
+      {
+        id: "ref3",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Titta på en bedömningsmatris du använder eller har använt. Är progressionen mellan G och VG tydlig? Vad skulle du vilja förtydliga?",
+        key: "mod3_ref1"
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Primär och sekundär bedömning",
+    desc: "Kollegial kalibrering, samsyn och dokumentation för rättssäker bedömning.",
+    time: "~13 min",
+    sections: [
+      {
+        id: "primary",
+        title: "Primär och sekundär bedömning",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Primär bedömning – kurslärarens ansvar</h3>
+            <p>Den <strong>primära bedömningen</strong> görs av den lärare som ansvarar för kursen. Det är den initiala och ofta slutgiltiga bedömningen av studerandens prestation.</p>
+            <ul>
+              <li>Läraren samlar in bedömningsunderlag (uppgifter, prov, observationer)</li>
+              <li>Läraren värderar prestationerna mot bedömningskriterierna</li>
+              <li>Läraren fattar betygsbeslut</li>
+              <li>Läraren dokumenterar beslut och dess grund</li>
+            </ul>
+            <div class="info-box">
+              <strong>Dokumentation</strong>
+              All primär bedömning ska dokumenteras så att beslutet går att spåra i efterhand. Spara bedömningsunderlag och notera mot vilka kriterier betyget sattes.
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Sekundär bedömning – extern kontroll</h3>
+            <p>I många YH-utbildningar används <strong>sekundär bedömning</strong> – en extern examinator eller en kollegas granskning av bedömningen. Det är ett viktigt rättssäkerhetsinstrument.</p>
+            <h4>När används sekundär bedömning?</h4>
+            <ul>
+              <li>Vid examinationsmoment med höga krav på likvärdighet</li>
+              <li>För betyget VG, om det är specificerat i utbildningsplanen</li>
+              <li>Vid oklara eller tveksamma gränsfall</li>
+              <li>Vid kompletteringar och omprövningar</li>
+            </ul>
+            <h4>Extern examinator</h4>
+            <p>Vissa YH-utbildningar kräver att en extern examinator – från branschen eller en annan utbildning – deltar i bedömningen. Extern examinators roll är att:</p>
+            <ul>
+              <li>Granska att bedömningskriterierna tillämpas korrekt</li>
+              <li>Bekräfta att betygsbeslut är väl motiverade</li>
+              <li>Bidra med branschperspektiv</li>
+            </ul>
+          </div>
+          <div class="content-block">
+            <h3>Kalibrering och samsyn</h3>
+            <p>Om flera lärare bedömer samma kurs eller program är <strong>kalibrering</strong> avgörande för likvärdighet. Kalibrering innebär att lärare jämför sina bedömningar och diskuterar sig fram till en gemensam tolkning av kriterierna.</p>
+            <div class="example-box">
+              <div class="ex-label">Hur en kalibreringssession kan se ut</div>
+              <ol style="font-size:0.88rem;">
+                <li>Alla lärare bedömer samma anonymiserade uppgift oberoende av varandra</li>
+                <li>Bedömningarna jämförs och skillnader diskuteras</li>
+                <li>Lärarna enas om tolkningar av gränsfall och oklara fall</li>
+                <li>Gemensamt dokument upprättas med samsynen</li>
+              </ol>
+            </div>
+            <div class="warning-box">
+              <strong>Viktigt</strong>
+              Kalibrering handlar inte om att alla alltid ska komma fram till exakt samma betyg. Det handlar om att ha en gemensam förståelse för vad kriterierna innebär – och att kunna motivera avvikelser.
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "case4",
+        title: "Mini-case: Bedömningsskillnad",
+        type: "case",
+        scenario: `Lärare A och lärare B bedömer samma projektrapport av studeranden Yusra. Lärare A sätter G, lärare B sätter VG. Lärare B motiverar: "Yusras analys är imponerande och håller klart VG-nivå." Lärare A svarar: "Ja, analysen är bra, men hennes slutsatser saknar den egna reflektionen som kriteriet kräver för VG."`,
+        question: "Hur ska situationen hanteras?",
+        options: [
+          { text: "Lärare A ceder till lärare B eftersom VG alltid är bättre för studenten.", correct: false, feedback: "Betygsbeslut ska fattas utifrån kriterierna – inte för att gynna studenten. Det vore inte rättssäkert gentemot andra studeranden." },
+          { text: "Lärare B ceder till lärare A utan vidare diskussion.", correct: false, feedback: "Det kan vara rätt slutsats, men processen är fel. Båda lärarna bör gå igenom kriteriet gemensamt och grunda beslutet i texten, inte i vem som ger med sig." },
+          { text: "Lärarna läser rapporten gemensamt mot VG-kriteriet om slutsatser och fattar ett gemensamt motiverat beslut.", correct: true, feedback: "Rätt! Kalibrering innebär att gemensamt gå tillbaka till kriterierna och grunda beslutet i dem – inte i vem som är mest envis. Dokumentera sedan den gemensamma bedömningen." },
+          { text: "Man låter en tredje lärare fatta beslut utan att diskutera.", correct: false, feedback: "Att lägga hela beslutet på en tredje part utan att de inblandade lärarna har diskuterat igenom kriterierna löser inte grundproblemet och skapar ingen samsyn." }
+        ],
+        key: "mod4_case1"
+      },
+      {
+        id: "ref4",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Hur sker kalibrering av bedömning i din utbildning idag? Vad fungerar bra och vad skulle kunna förbättras för ökad likvärdighet?",
+        key: "mod4_ref1"
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Från bedömning till betyg",
+    desc: "Hur bedömningsunderlag vägs samman, hantering av gränsfall och transparens.",
+    time: "~14 min",
+    sections: [
+      {
+        id: "weighing",
+        title: "Att väga samman underlag",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Det sammantagna betygsbeslut</h3>
+            <p>Betyget sätts sällan på en enda uppgift. Oftast finns flera bedömningsunderlag – inlämningar, prov, praktiska moment, muntliga redovisningar. Dessa ska <strong>vägas samman</strong> till ett samlat betygsbeslut.</p>
+            <div class="info-box">
+              <strong>Princip</strong>
+              Det sammantagna betygsbeslut baseras på <em>helheten</em> av insamlad information om studerandens kunskaper, färdigheter och kompetenser i relation till läranderesultaten.
+            </div>
+            <h4>Tre modeller för sammanvägning</h4>
+            <p><strong>1. Viktad modell</strong> – Varje bedömningsmoment tilldelas en vikt. En rapport kan stå för 40%, ett prov för 30% osv. Viktningen ska framgå av kursplanen.</p>
+            <p><strong>2. Kriteriematris-modell</strong> – Varje läranderesultat har egna kriterier. Alla läranderesultat ska vara minst G för att få G i kursen. VG kräver att alla VG-kriterier uppfylls.</p>
+            <p><strong>3. Samlad helhetsbedömning</strong> – Läraren gör en professionell helhetsbedömning av all prestation. Används i kurser där prestation inte lätt låter sig brytas ner i separata delar.</p>
+            <div class="warning-box">
+              <strong>Undvik matematisk beräkning som enda metod</strong>
+              "Studenten fick 56% = G" är inte alltid tillräckligt. Procentgränser måste hänga ihop med vad studenten faktiskt kan demonstrera – inte bara hur många rätt de fått.
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Gränsfall – när det inte är uppenbart</h3>
+            <p>I praktiken finns alltid gränsfall. Studenten som "nästan" uppnår VG, eller som har en stark prestation på de flesta kriterier men ett tydligt svagt område.</p>
+            <h4>Riktlinjer för gränsfall:</h4>
+            <ol>
+              <li>Gå tillbaka till kriterierna – inte till din magkänsla</li>
+              <li>Fråga: "Har studenten <em>visat</em> att de kan [kriteriet]?" – inte "Kan studenten förmodligen [kriteriet]?"</li>
+              <li>Om ett G-kriterium inte är uppfyllt → betyget kan inte vara G</li>
+              <li>Dokumentera ditt resonemang skriftligt</li>
+              <li>Vid tveksamhet – kalibrering med kollega</li>
+            </ol>
+            <div class="example-box">
+              <div class="ex-label">Vanligt gränsfall</div>
+              <p style="font-size:0.88rem;">"Sofias analys är på G-nivå, men hennes slutsatser är på VG-nivå. Hon uppfyller 4 av 5 VG-kriterier." → Betyget G. VG kräver att <em>alla</em> VG-kriterier är uppfyllda. Sofia kan ges möjlighet till komplettering om utbildningsplanen tillåter.</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "grade-decision",
+        title: "Övning: Sätt betyget",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">⚖️</div>
+              <div><div class="ex-title">Beslutsövning: Vilket betyg?</div><div class="ex-subtitle">Analysera bedömningsunderlaget och fatta betygsbeslut</div></div>
+            </div>
+            <div id="grade-scenario" style="background:#fdf8f5;border-radius:8px;padding:16px;margin-bottom:16px;font-size:0.9rem;">
+              <p><strong>Student: Björn, kurs: Byggnadsteknik och byggregler</strong></p>
+              <p style="margin-top:8px;">Kursens läranderesultat bedöms via tre moment:</p>
+              <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:10px;">
+                <tr style="background:var(--blue-dark);color:white;"><th style="padding:8px;">Moment</th><th style="padding:8px;">Kriterium</th><th style="padding:8px;">Bedömning</th></tr>
+                <tr><td style="padding:8px;border:1px solid var(--border);">Skriftlig BBR-uppgift (40%)</td><td style="padding:8px;border:1px solid var(--border);">Tillämpa BBR-krav på ett byggfall</td><td style="padding:8px;border:1px solid var(--border);"><span class="grade grade-vg">VG</span> – Korrekt tillämpning med välmotiverade slutsatser</td></tr>
+                <tr style="background:#fdf8f5;"><td style="padding:8px;border:1px solid var(--border);">Ritningsläsning (30%)</td><td style="padding:8px;border:1px solid var(--border);">Tolka plan- och sektionsritning</td><td style="padding:8px;border:1px solid var(--border);"><span class="grade grade-g">G</span> – Korrekt avläsning på grundläggande nivå</td></tr>
+                <tr><td style="padding:8px;border:1px solid var(--border);">Muntlig redovisning (30%)</td><td style="padding:8px;border:1px solid var(--border);">Redovisa och motivera ett byggtekniskt val</td><td style="padding:8px;border:1px solid var(--border);"><span class="grade grade-ig">IG</span> – Motivering saknas, redovisningen är otydlig</td></tr>
+              </table>
+            </div>
+            <p style="font-weight:600;margin-bottom:10px;">Vilket kursbetyg ska Björn få?</p>
+            <div onclick="gradeDecision(this,'ig')" class="decision-btn">🔴 IG – Icke Godkänd</div>
+            <div onclick="gradeDecision(this,'g')" class="decision-btn">🟢 G – Godkänd</div>
+            <div onclick="gradeDecision(this,'vg')" class="decision-btn">🔵 VG – Väl Godkänd</div>
+            <div id="grade-result" class="case-result"></div>
+          </div>
+        `
+      },
+      {
+        id: "transparency",
+        title: "Transparens mot studerande",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Att kommunicera betygsbeslut</h3>
+            <p>Transparens innebär att studeranden förstår <em>varför</em> de fått det betyget de fått. Det stärker lärandet, minskar konflikter och är en rättssäkerhetsfråga.</p>
+            <h4>Tre delar i ett transparent betygsbeslut:</h4>
+            <ol>
+              <li><strong>Vad bedömdes</strong> – Vilka läranderesultat och kriterier gällde?</li>
+              <li><strong>Hur prestationen förhåller sig</strong> – Mot vilka kriterier uppfylldes de och inte?</li>
+              <li><strong>Vad är nästa steg</strong> – Vad behöver studenten göra för att nå nästa nivå?</li>
+            </ol>
+            <div class="example-box">
+              <div class="ex-label">Exempel: Transparent betygskommunikation (IG)</div>
+              <p style="font-size:0.88rem;">"Din rapport uppfyller G-kriterierna för analys och källhantering. Däremot uppfyller den ännu inte G-kriteriet för slutsatser: slutsatserna behöver följa logiskt av analysen. För att nå G behöver du revidera avsnittet om slutsatser. Jag föreslår att vi ses under handledningen onsdag."</p>
+            </div>
+            <div class="info-box">
+              <strong>Studerandens rätt</strong>
+              Studeranden har rätt att begära en motivering till betyget. Denna motivering ska kunna ges skriftligt och baseras på bedömningskriterierna.
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "ref5",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Hur kommunicerar du idag dina betygsbeslut till studeranden? Vad i din nuvarande kommunikation är redan transparent? Vad kan förbättras?",
+        key: "mod5_ref1"
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Formativ bedömning och feed-forward",
+    desc: "Feedback som stärker lärande – skillnaden mellan feedback och feed-forward.",
+    time: "~12 min",
+    sections: [
+      {
+        id: "formative",
+        title: "Formativ bedömning",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Bedömning för lärande – inte bara av lärande</h3>
+            <p>Det finns två övergripande syften med bedömning:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
+              <div style="background:#fdf8f5;border-radius:8px;padding:16px;border:2px solid var(--border);">
+                <div style="font-weight:700;color:var(--text-muted);margin-bottom:6px;font-size:0.85rem;">SUMMATIV BEDÖMNING</div>
+                <div style="font-weight:600;color:var(--blue-dark);margin-bottom:8px;">Bedömning av lärande</div>
+                <p style="font-size:0.88rem;">Mäter vad studenten kan vid en given tidpunkt. Resulterar i ett betyg. Äger rum i slutet av ett moment.</p>
+              </div>
+              <div style="background:#f0faf5;border-radius:8px;padding:16px;border:2px solid #86efac;">
+                <div style="font-weight:700;color:var(--green);margin-bottom:6px;font-size:0.85rem;">FORMATIV BEDÖMNING</div>
+                <div style="font-weight:600;color:var(--blue-dark);margin-bottom:8px;">Bedömning för lärande</div>
+                <p style="font-size:0.88rem;">Stödjer studentens lärprocess. Äger rum under kursens gång. Fokus på framsteg och nästa steg – inte på betyg.</p>
+              </div>
+            </div>
+            <p>Forskning visar tydligt att <strong>formativ bedömning är det enskilt mest effektiva sättet</strong> att förbättra studerandens lärande (Black & Wiliam, 1998). Ändå är det den bedömningsform som YH-lärare ägnar minst tid åt.</p>
+          </div>
+          <div class="content-block">
+            <h3>Feedback vs. Feed-forward</h3>
+            <p>Traditionell återkoppling (feedback) blickar bakåt: "Det här fungerade / fungerade inte." Feed-forward blickar framåt: "Det här är konkret vad du ska göra härnäst."</p>
+            <div class="feedback-compare">
+              <div class="fb-box bad">
+                <div class="fb-label">Feedback (bakåtblickande)</div>
+                <p>"Bra analys men slutsatserna är svaga. Du borde ha kopplat bättre till teorin."</p>
+              </div>
+              <div class="fb-box good">
+                <div class="fb-label">Feed-forward (framåtblickande)</div>
+                <p>"Din analys är stark. I nästa version: skriv om slutsatserna så att varje slutsats direkt hänvisar till ett specifikt analysresultat från avsnitt 3."</p>
+              </div>
+            </div>
+            <div class="feedback-compare" style="margin-top:12px;">
+              <div class="fb-box bad">
+                <div class="fb-label">Feedback</div>
+                <p>"Du har inte förstått hur man läser en byggritning."</p>
+              </div>
+              <div class="fb-box good">
+                <div class="fb-label">Feed-forward</div>
+                <p>"På ritning A3: läs av väggtjocklekarna och ange dem i din svarstabell. Det är just det steget som saknas för att uppfylla G-kriteriet om ritningsavläsning."</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "feedforward-ex",
+        title: "Övning: Omskriv till feed-forward",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">✍️</div>
+              <div><div class="ex-title">Övning: Omskriv till feed-forward</div><div class="ex-subtitle">Välj den bästa feed-forward-formuleringen</div></div>
+            </div>
+            <div id="ff-questions"></div>
+          </div>
+        `
+      },
+      {
+        id: "timing",
+        title: "Tajming och språk",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Effektiv feed-forward: tajming och språk</h3>
+            <h4>Tajming är allt</h4>
+            <p>Återkoppling ska ges <em>medan studenten kan göra något åt det</em>. Feedback som ges efter att kursen är slut – på en betygssatt uppgift som inte kan göras om – har minimalt lärsvärde.</p>
+            <div class="example-box">
+              <div class="ex-label">Princip för tajming</div>
+              <ul style="font-size:0.88rem;">
+                <li>Ge återkoppling på utkast, inte bara på slutprodukter</li>
+                <li>Bygg in återkopplingstillfällen mitt i kursen</li>
+                <li>Snabb, enkel återkoppling (checklistor) är ofta bättre än detaljerade kommentarer sent</li>
+              </ul>
+            </div>
+            <h4>Språk som stärker – inte krossar</h4>
+            <p>Återkoppling ska riktas mot <em>arbetet</em>, inte mot personen. Tre principer:</p>
+            <ol>
+              <li><strong>Specifikt</strong> – Peka på exakt vad i texten/arbetet som avses</li>
+              <li><strong>Konstruktivt</strong> – Beskriv vad som ska göras annorlunda, inte bara vad som är fel</li>
+              <li><strong>Kalibrerat</strong> – Anpassa detaljrikedomen till studerandens nivå och uppgiftens art</li>
+            </ol>
+            <div class="warning-box">
+              <strong>Undvik "sandwich-feedback"</strong>
+              Att alltid börja och sluta med positiva kommentarer för att linda in kritik kan göra att studeranden missar den centrala budskapet. Var direkt och tydlig – men alltid respektfull.
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "ref6",
+        title: "Reflektion",
+        type: "reflection",
+        prompt: "Tänk på ett tillfälle då du gav återkoppling till en studerande. Var det feedback (bakåtblickande) eller feed-forward (framåtblickande)? Hur skulle du formulera om det nu?",
+        key: "mod6_ref1"
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Studerande som aktiva i sin bedömning",
+    desc: "Självbedömning, kamratbedömning och hur studerande kan använda matriser.",
+    time: "~10 min",
+    sections: [
+      {
+        id: "student-active",
+        title: "Studeranden i fokus",
+        type: "theory",
+        content: `
+          <div class="content-block">
+            <h3>Varför involvera studeranden i bedömningen?</h3>
+            <p>Forskning och beprövad erfarenhet visar att studeranden lär sig mer och djupare när de:</p>
+            <ul>
+              <li>Förstår vad som förväntas av dem (<strong>transparens</strong>)</li>
+              <li>Kan reflektera över sin egen prestation (<strong>självbedömning</strong>)</li>
+              <li>Ger och tar emot bedömning från kurskamrater (<strong>kamratbedömning</strong>)</li>
+              <li>Tar ansvar för sin lärutveckling (<strong>agency</strong>)</li>
+            </ul>
+            <div class="info-box">
+              <strong>Koppling till YH:s mål</strong>
+              YH utbildar yrkesverksamma som ska kunna reflektera över och vidareutveckla sin kompetens i arbetslivet. Självbedömningsförmåga är i sig ett centralt yrkeskompetens.
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Självbedömning i praktiken</h3>
+            <p>Självbedömning handlar inte om att studenten sätter sitt eget betyg – det är lärarens ansvar. Det handlar om att studenten <em>tränar förmågan att bedöma sin prestation</em> mot givna kriterier.</p>
+            <h4>Tre steg för framgångsrik självbedömning:</h4>
+            <ol>
+              <li>Studenten får tillgång till bedömningskriterierna <em>innan</em> uppgiften påbörjas</li>
+              <li>Studenten fyller i en självskattning mot varje kriterium</li>
+              <li>Läraren jämför sin bedömning med studentens – diskrepanser blir underlag för lärsamtal</li>
+            </ol>
+            <div class="example-box">
+              <div class="ex-label">Exempel: Självskattningsfråga</div>
+              <p style="font-size:0.88rem;">"Markera var du befinner dig på en skala 1–5 för varje kriterium, och skriv en konkret mening om <em>vad</em> i din uppgift som visar att du uppnår det."</p>
+            </div>
+          </div>
+          <div class="content-block">
+            <h3>Kamratbedömning – värdefullt men krävande</h3>
+            <p>Kamratbedömning (peer assessment) innebär att studeranden bedömer varandras arbeten mot givna kriterier.</p>
+            <h4>Fördelar:</h4>
+            <ul>
+              <li>Studenten tvingas sätta sig in i kriterierna på djupet</li>
+              <li>Läraren avlastas – studeranden ger mer och snabbare återkoppling</li>
+              <li>Skapar diskussion om kvalitet och kriterier</li>
+            </ul>
+            <h4>Förutsättningar för att det ska fungera:</h4>
+            <ul>
+              <li>Tydliga kriterier och exempel på vad G/VG ser ut i uppgiften</li>
+              <li>Strukturerat format – studenten ska sätta ord på observationer, inte bara ge en siffra</li>
+              <li>Psykologisk trygghet – ingen ska räds att bedömas av en kurskamrat</li>
+              <li>Läraren har slutgiltigt ansvar för betygssättning</li>
+            </ul>
+            <div class="warning-box">
+              <strong>Vanlig fallgrop</strong>
+              Kamratbedömning som inte har tydliga ramar leder till "kompisbedömning" – alla får bra omdömen för att ingen vill verka kritisk. Bygg strukturen noga.
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "planning",
+        title: "Planera för aktiva studeranden",
+        type: "exercise",
+        content: `
+          <div class="exercise-block">
+            <div class="ex-header">
+              <div class="ex-icon">🗓️</div>
+              <div><div class="ex-title">Planeringsövning</div><div class="ex-subtitle">Designa ett moment med studeranden som aktiva</div></div>
+            </div>
+            <p style="margin-bottom:14px;font-size:0.9rem;">Välj vilket av dessa moment som bäst passar en kurs du undervisar i. Klicka för att se hur du kan implementera det.</p>
+            <div id="planning-options" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+        `
+      },
+      {
+        id: "ref7",
+        title: "Reflektion och planering",
+        type: "reflection",
+        prompt: "Välj EN konkret sak du vill prova i din nästa kurs för att göra studeranden mer aktiva i sin bedömning. Beskriv vad du ska göra, när och hur du ska följa upp effekten.",
+        key: "mod7_ref1"
+      }
+    ]
+  }
+];
+
+// ===================== STATE =====================
+let currentModule = null;
+let currentSectionIdx = 0;
+const state = {
+  get: (key, def) => { try { return JSON.parse(localStorage.getItem('yhkurs_' + key)) ?? def; } catch { return def; } },
+  set: (key, val) => localStorage.setItem('yhkurs_' + key, JSON.stringify(val)),
+  modProgress: () => state.get('progress', {}),
+  setModProgress: (mid, data) => { const p = state.modProgress(); p[mid] = {...(p[mid]||{}), ...data}; state.set('progress', p); },
+  isModDone: (mid) => state.modProgress()[mid]?.done === true,
+  isModStarted: (mid) => !!state.modProgress()[mid],
+  getSectionDone: (mid, sid) => (state.modProgress()[mid]?.sections || {})[sid],
+  setSectionDone: (mid, sid) => {
+    const p = state.modProgress();
+    if (!p[mid]) p[mid] = {};
+    if (!p[mid].sections) p[mid].sections = {};
+    p[mid].sections[sid] = true;
+    state.set('progress', p);
+  }
+};
+
+// ===================== RENDER HOME =====================
+function showHome() {
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('module-view').style.display = 'none';
+  document.getElementById('completion-view').style.display = 'none';
+  updateProgressBar();
+  renderModuleCards();
+}
+
+function renderModuleCards() {
+  const grid = document.getElementById('modules-grid');
+  grid.innerHTML = MODULES.map(m => {
+    const done = state.isModDone(m.id);
+    const started = state.isModStarted(m.id);
+    const cls = done ? 'completed' : started ? 'in-progress' : '';
+    const statusLabel = done ? '<span class="module-status status-done">✓ Klar</span>' : started ? '<span class="module-status status-progress">⟳ Påbörjad</span>' : '<span class="module-status status-new">Ej påbörjad</span>';
+    return `<div class="module-card ${cls}" onclick="openModule(${m.id})">
+      <div class="module-num">Modul ${m.id}</div>
+      <h3>${m.title}</h3>
+      <p>${m.desc}</p>
+      <div class="module-meta">${statusLabel}<span class="module-time">${m.time}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function updateProgressBar() {
+  const done = MODULES.filter(m => state.isModDone(m.id)).length;
+  const pct = Math.round((done / MODULES.length) * 100);
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} av ${MODULES.length} moduler klara`;
+}
+
+// ===================== OPEN MODULE =====================
+function openModule(id) {
+  currentModule = MODULES.find(m => m.id === id);
+  currentSectionIdx = 0;
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('module-view').style.display = 'block';
+  document.getElementById('mod-tag').textContent = `Modul ${id} av ${MODULES.length}`;
+  document.getElementById('mod-title').textContent = currentModule.title;
+  document.getElementById('mod-desc').textContent = currentModule.desc;
+  state.setModProgress(id, { started: true });
+  renderSectionTabs();
+  renderSection();
+}
+
+function renderSectionTabs() {
+  const tabs = document.getElementById('section-tabs');
+  tabs.innerHTML = currentModule.sections.map((s, i) => {
+    const done = state.getSectionDone(currentModule.id, s.id);
+    const active = i === currentSectionIdx;
+    return `<div class="section-tab ${active ? 'active' : ''} ${done ? 'done' : ''}" onclick="goToSection(${i})">${s.title}</div>`;
+  }).join('');
+}
+
+function goToSection(idx) {
+  currentSectionIdx = idx;
+  renderSectionTabs();
+  renderSection();
+  window.scrollTo({ top: 60, behavior: 'smooth' });
+}
+
+function renderSection() {
+  const sec = currentModule.sections[currentSectionIdx];
+  const total = currentModule.sections.length;
+  document.getElementById('section-counter').textContent = `${currentSectionIdx + 1} / ${total}`;
+  document.getElementById('btn-prev').style.visibility = currentSectionIdx === 0 ? 'hidden' : '';
+  const isLast = currentSectionIdx === total - 1;
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = isLast ? 'Avsluta modul ✓' : 'Nästa →';
+  nextBtn.className = isLast ? 'btn btn-success' : 'btn btn-primary';
+
+  const container = document.getElementById('section-content');
+  container.innerHTML = '';
+  container.className = 'fade-in';
+
+  if (sec.type === 'theory') {
+    container.innerHTML = sec.content;
+  } else if (sec.type === 'exercise') {
+    container.innerHTML = sec.content;
+    initExercise(sec);
+  } else if (sec.type === 'reflection') {
+    container.innerHTML = renderReflection(sec);
+    const saved = state.get('ref_' + sec.key, '');
+    document.getElementById('ref-' + sec.key).value = saved;
+  } else if (sec.type === 'case') {
+    container.innerHTML = renderCase(sec);
+  }
+}
+
+function nextSection() {
+  const sec = currentModule.sections[currentSectionIdx];
+  state.setSectionDone(currentModule.id, sec.id);
+  const isLast = currentSectionIdx === currentModule.sections.length - 1;
+  if (isLast) {
+    state.setModProgress(currentModule.id, { done: true });
+    updateProgressBar();
+    const allDone = MODULES.every(m => state.isModDone(m.id));
+    if (allDone) { showCompletion(); return; }
+    showHome();
+  } else {
+    currentSectionIdx++;
+    renderSectionTabs();
+    renderSection();
+    window.scrollTo({ top: 60, behavior: 'smooth' });
+  }
+}
+
+function prevSection() {
+  if (currentSectionIdx > 0) { currentSectionIdx--; renderSectionTabs(); renderSection(); window.scrollTo({ top: 60, behavior: 'smooth' }); }
+}
+
+// ===================== REFLECTION =====================
+function renderReflection(sec) {
+  return `<div class="reflection-block">
+    <div class="ref-header">💭 Reflektion</div>
+    <p style="margin-bottom:12px;font-weight:500;">${sec.prompt}</p>
+    <textarea id="ref-${sec.key}" placeholder="Skriv dina tankar här..."></textarea>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="ref-save-btn" onclick="saveReflection('${sec.key}')">Spara reflektion</button>
+      <span class="saved-indicator" id="saved-${sec.key}">✓ Sparad</span>
+    </div>
+  </div>`;
+}
+
+function saveReflection(key) {
+  const val = document.getElementById('ref-' + key).value;
+  state.set('ref_' + key, val);
+  const ind = document.getElementById('saved-' + key);
+  ind.style.display = 'inline';
+  setTimeout(() => { if (ind) ind.style.display = 'none'; }, 2000);
+}
+
+// ===================== CASE =====================
+function renderCase(sec) {
+  const opts = sec.options.map((o, i) => `<button class="decision-btn" onclick="decideCase(this, ${o.correct}, '${(o.feedback || '').replace(/'/g, "\\'")}', '${sec.key}')">${o.text}</button>`).join('');
+  return `<div class="case-block">
+    <div class="case-header">📋 Mini-case</div>
+    <div class="case-scenario">${sec.scenario}</div>
+    <p style="font-weight:600;margin-bottom:10px;">${sec.question}</p>
+    ${opts}
+    <div class="case-result" id="case-result-${sec.key}"></div>
+  </div>`;
+}
+
+function decideCase(btn, correct, feedback, key) {
+  const btns = btn.parentElement.querySelectorAll('.decision-btn');
+  btns.forEach(b => { b.onclick = null; b.style.opacity = '0.6'; });
+  btn.className = 'decision-btn ' + (correct ? 'chosen-right' : 'chosen-wrong');
+  btn.style.opacity = '1';
+  const res = document.getElementById('case-result-' + key);
+  res.className = 'case-result show ' + (correct ? 'correct' : 'wrong');
+  res.innerHTML = (correct ? '<strong>✓ Rätt!</strong> ' : '<strong>✗ Inte riktigt.</strong> ') + feedback;
+  if (correct) state.set('case_' + key, true);
+}
+
+// ===================== QUIZ =====================
+function answerQuiz(qid, btn, correct, fbId) {
+  const siblings = btn.parentElement.querySelectorAll('.quiz-option');
+  siblings.forEach(s => { s.onclick = null; });
+  siblings.forEach(s => s.classList.remove('selected'));
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    siblings.forEach(s => {
+      const marker = s.querySelector('.opt-marker');
+      if (s.dataset.correct === 'true') s.classList.add('correct');
+    });
+  }
+  const fb = document.getElementById(fbId);
+  fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct
+    ? '✓ Korrekt! ' + getQuizFeedback(qid, true)
+    : '✗ Inte riktigt. ' + getQuizFeedback(qid, false);
+  state.set('quiz_' + qid, correct);
+}
+
+function getQuizFeedback(qid, correct) {
+  const map = {
+    q1: { t: 'Alla läranderesultat måste vara uppnådda för betyget G. Ansträngning och närvaro kan aldrig kompensera för att ett läranderesultat inte uppnåtts.', f: 'Kom ihåg: alla läranderesultat måste uppnås för G. Ansträngning och deltagande bedöms inte i betyget.' },
+    q2: { t: 'Likvärdighet innebär att samma prestation ska bedömas på samma sätt oavsett vem som bedömer.', f: 'Rättssäkerhet handlar om studerandens rätt till förutsägbar bedömning. Transparens handlar om att synliggöra kriterierna. Likvärdighet handlar om att samma prestation bedöms lika.' }
+  };
+  return (map[qid] || {})[correct ? 't' : 'f'] || '';
+}
+
+// ===================== EXERCISE INIT =====================
+function initExercise(sec) {
+  if (sec.id === 'lr-exercise') initLRExercise();
+  if (sec.id === 'matrix-sim') initMatrixSim();
+  if (sec.id === 'feedforward-ex') initFFExercise();
+  if (sec.id === 'planning') initPlanning();
+}
+
+// LR Exercise
+const LR_ITEMS = [
+  { text: "Studeranden ska gå igenom byggprocessens olika skeden.", bedömbar: false },
+  { text: "Studeranden ska kunna beskriva byggprocessens skeden och redogöra för varje aktörs ansvar.", bedömbar: true },
+  { text: "Studeranden ska delta aktivt på lektioner om byggmaterial.", bedömbar: false },
+  { text: "Studeranden ska kunna välja lämpligt byggmaterial för en given konstruktion och motivera valet utifrån tekniska och ekonomiska krav.", bedömbar: true },
+  { text: "Studeranden ska genomgå en introduktion till Boverkets Byggregler.", bedömbar: false },
+  { text: "Studeranden ska kunna tillämpa relevanta BBR-krav på ett givet byggprojekt och motivera sin tolkning.", bedömbar: true },
+];
+
+function initLRExercise() {
+  const container = document.getElementById('lr-items');
+  if (!container) return;
+  container.innerHTML = LR_ITEMS.map((item, i) => `
+    <div class="sort-item" id="lr-item-${i}" onclick="toggleLRItem(${i})">${item.text}</div>
+  `).join('');
+}
+
+function toggleLRItem(i) {
+  const el = document.getElementById('lr-item-' + i);
+  el.classList.toggle('selected');
+}
+
+function checkLRItems() {
+  let correct = 0;
+  LR_ITEMS.forEach((item, i) => {
+    const el = document.getElementById('lr-item-' + i);
+    const selected = el.classList.contains('selected');
+    el.onclick = null;
+    el.classList.remove('selected');
+    if (selected && item.bedömbar) { el.classList.add('correct'); correct++; }
+    else if (selected && !item.bedömbar) { el.classList.add('incorrect'); }
+    else if (!selected && item.bedömbar) { el.classList.add('correct'); el.style.opacity = '0.6'; }
+  });
+  const res = document.getElementById('lr-result');
+  res.style.display = 'block';
+  const bedömbara = LR_ITEMS.filter(x => x.bedömbar).length;
+  res.innerHTML = `<div class="success-box"><strong style="color:var(--green);font-size:0.85rem;">Resultat</strong><p>De gröna alternativen är bedömningsbara: de beskriver konkret vad studenten ska <em>kunna göra</em>. De övriga är undervisningsmål eller aktivitetsbeskrivningar – de kan inte direkt ligga till grund för ett betygsbeslut.</p></div>`;
+  document.getElementById('lr-check-btn').style.display = 'none';
+  state.set('ex_lr', true);
+}
+
+// Matrix sim
+const MATRIX_CRITERIA = [
+  { text: "Studenten visar god förståelse för byggregler.", ok: false, tip: "Otydligt! 'God förståelse' är subjektivt och inte observerbart. Hur vet du när förståelsen är 'god'? Beskriv istället vad studenten konkret ska kunna göra." },
+  { text: "Studenten kan identifiera vilket BBR-avsnitt som gäller för en given byggnadstyp och redovisa det aktuella kravet.", ok: true, tip: "Utmärkt! Konkret, observerbart och mätbart. Du kan direkt se om studenten pekar ut rätt avsnitt och återger kravet korrekt." },
+  { text: "Studenten är aktiv och deltar på APL-plats.", ok: false, tip: "Detta är aktivitetsbedömning – det mäter om studenten är på plats, inte vad de kan. Byt fokus till vad studenten ska kunna utföra eller visa upp." },
+];
+
+function initMatrixSim() {
+  const container = document.getElementById('matrix-items');
+  if (!container) return;
+  container.innerHTML = MATRIX_CRITERIA.map((c, i) => `
+    <div style="background:#fdf8f5;border:1.5px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;" id="mc-${i}" onclick="revealCriterion(${i})">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">G-KRITERIUM ${i+1} – Klicka för bedömning</div>
+      <p style="font-size:0.9rem;">${c.text}</p>
+      <div id="mc-tip-${i}" style="display:none;margin-top:10px;padding:10px;border-radius:6px;font-size:0.88rem;"></div>
+    </div>
+  `).join('');
+}
+
+function revealCriterion(i) {
+  const c = MATRIX_CRITERIA[i];
+  const tip = document.getElementById('mc-tip-' + i);
+  const box = document.getElementById('mc-' + i);
+  tip.style.display = 'block';
+  tip.style.background = c.ok ? 'var(--green-light)' : '#fff1f2';
+  tip.style.border = c.ok ? '1px solid #86efac' : '1px solid #fecdd3';
+  tip.innerHTML = (c.ok ? '✅ ' : '⚠️ ') + c.tip;
+  box.onclick = null;
+  box.style.borderColor = c.ok ? 'var(--green)' : 'var(--red)';
+  state.set('ex_matrix', true);
+}
+
+// Feed-forward exercise
+const FF_QUESTIONS = [
+  {
+    original: "Din ritningsläsning var rörig och det var svårt att följa dina svar.",
+    options: [
+      { text: "I nästa uppgift: gå igenom ritningen i ordning – börja med att identifiera skalan, sedan väggtjocklekar, sedan dörr- och fönsterplaceringar. Skriv ett svar per punkt.", correct: true },
+      { text: "Du behöver träna mer på att läsa ritningar.", correct: false },
+      { text: "Rörigheten berodde förmodligen på att du inte förberedde dig tillräckligt.", correct: false },
+    ]
+  },
+  {
+    original: "Du har inte utfört fogningen korrekt.",
+    options: [
+      { text: "Se till att läsa instruktionerna igen innan nästa uppgift.", correct: false },
+      { text: "I din nästa praktiska uppgift: se till att grundningssteget är helt torrt innan fogmassan appliceras. Det är just det steget som saknades och som gör att fogen inte håller tätt.", correct: true },
+      { text: "Fogningen uppfyllde inte kraven.", correct: false },
+    ]
+  }
+];
+
+function initFFExercise() {
+  const container = document.getElementById('ff-questions');
+  if (!container) return;
+  container.innerHTML = FF_QUESTIONS.map((q, qi) => `
+    <div style="margin-bottom:24px;">
+      <div class="example-box" style="margin-bottom:12px;">
+        <div class="ex-label">Originalfeedback att omvandla</div>
+        <p style="font-style:italic;">"${q.original}"</p>
+      </div>
+      <p style="font-weight:600;margin-bottom:8px;font-size:0.9rem;">Välj den bästa feed-forward-formuleringen:</p>
+      ${q.options.map((o, oi) => `
+        <div class="quiz-option" onclick="answerFF(${qi},${oi},${o.correct},'ff-fb-${qi}')">
+          <div class="opt-marker">${String.fromCharCode(65+oi)}</div>
+          <p>${o.text}</p>
+        </div>
+      `).join('')}
+      <div class="quiz-feedback" id="ff-fb-${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function answerFF(qi, oi, correct, fbId) {
+  const wrap = document.getElementById('ff-questions').children[qi];
+  const opts = wrap.querySelectorAll('.quiz-option');
+  opts.forEach(o => o.onclick = null);
+  opts[oi].classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById(fbId);
+  fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct
+    ? '✓ Rätt! Denna formulering är specifik, handlingsorienterad och pekar framåt – det är kärnan i feed-forward.'
+    : '✗ Denna formulering blickar bakåt eller är för vag. Feed-forward ska ge studenten ett konkret nästa steg.';
+  state.set('ex_ff', true);
+}
+
+// Planning exercise
+const PLANNING_OPTIONS = [
+  {
+    title: "Självskattning med matris",
+    desc: "Studenten skattar sin prestation mot varje kriterium innan inlämning.",
+    how: `<p><strong>Genomförande:</strong></p><ol style="font-size:0.88rem;"><li>Dela bedömningsmatrisen i kursstart – inte bara inför inlämning</li><li>Be studenten fylla i en kolumn "Min bedömning" bredvid varje kriterium</li><li>Studenten skriver en konkret mening om var i uppgiften kriteriet uppfylls</li><li>Läraren jämför sin bedömning med studentens – olikheter ger lärsamtalspunkter</li></ol>`
+  },
+  {
+    title: "Kamratbedömning med checklistor",
+    desc: "Studeranden ger strukturerad återkoppling till en kurskamrats arbete.",
+    how: `<p><strong>Genomförande:</strong></p><ol style="font-size:0.88rem;"><li>Skapa en checklista (3–5 frågor) baserad på bedömningskriterierna</li><li>Para ihop studeranden anonymt eller öppet</li><li>Varje student fyller i checklistans frågor om kamratens arbete + ger ett specifikt förbättringsförslag</li><li>Läraren samlar in checklistor för att se mönster</li></ol>`
+  },
+  {
+    title: "Granskning av exemplarisk prestation",
+    desc: "Studeranden analyserar anonymiserade exempeluppgifter mot kriterierna.",
+    how: `<p><strong>Genomförande:</strong></p><ol style="font-size:0.88rem;"><li>Välj 2–3 anonymiserade uppgifter från tidigare kurs (med tillstånd) på G/VG-nivå</li><li>Studeranden bedömer dem mot matrisen – i grupp eller enskilt</li><li>Diskutera varför respektive uppgift uppfyller kriterierna</li><li>Studeranden formulerar ett mål för sin egen uppgift</li></ol>`
+  },
+];
+
+function initPlanning() {
+  const container = document.getElementById('planning-options');
+  if (!container) return;
+  container.innerHTML = PLANNING_OPTIONS.map((p, i) => `
+    <div style="background:white;border:1.5px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;" id="plan-${i}" onclick="revealPlan(${i})">
+      <div style="font-weight:600;color:var(--blue-dark);margin-bottom:4px;">${p.title}</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;">${p.desc}</div>
+      <div id="plan-how-${i}" style="display:none;margin-top:10px;padding:12px;background:#f0f8f7;border-radius:8px;font-size:0.88rem;">${p.how}</div>
+      <div style="font-size:0.82rem;color:var(--blue-mid);" id="plan-toggle-${i}">▼ Visa genomförande</div>
+    </div>
+  `).join('');
+}
+
+function revealPlan(i) {
+  const how = document.getElementById('plan-how-' + i);
+  const toggle = document.getElementById('plan-toggle-' + i);
+  const shown = how.style.display !== 'none';
+  how.style.display = shown ? 'none' : 'block';
+  toggle.textContent = shown ? '▼ Visa genomförande' : '▲ Dölj';
+  state.set('ex_planning', true);
+}
+
+// Grade decision
+function gradeDecision(btn, grade) {
+  const btns = btn.parentElement.querySelectorAll('.decision-btn');
+  btns.forEach(b => { b.onclick = null; b.style.opacity = '0.6'; });
+  btn.style.opacity = '1';
+  const res = document.getElementById('grade-result');
+  res.className = 'case-result show';
+  if (grade === 'ig') {
+    btn.classList.add('chosen-right');
+    res.className += ' correct';
+    res.innerHTML = '<strong>✓ Rätt!</strong> Björn ska ha IG. En IG på den muntliga redovisningen innebär att ett läranderesultat inte är uppnått. Alla läranderesultat måste vara uppnådda på minst G-nivå för betyget G, oavsett hur bra de andra momenten är. Björn bör ges möjlighet till komplettering.';
+  } else if (grade === 'g') {
+    btn.classList.add('chosen-wrong');
+    res.className += ' wrong';
+    res.innerHTML = '<strong>✗ Inte rätt.</strong> Även om BBR-uppgiften är VG och ritningsläsningen är G, har Björn IG på den muntliga redovisningen. Det innebär att ett läranderesultat inte uppnåtts – och alla läranderesultat krävs för betyget G.';
+  } else {
+    btn.classList.add('chosen-wrong');
+    res.className += ' wrong';
+    res.innerHTML = '<strong>✗ Inte rätt.</strong> VG kräver att alla VG-kriterier uppfylls, men Björn har IG på ett moment. Kursbetyget kan inte vara VG – och inte ens G. Resultatet ska vara IG med möjlighet till komplettering.';
+  }
+  state.set('ex_grade', true);
+}
+
+// ===================== MODAL =====================
+function openModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay') || e.currentTarget.className === 'modal-close') {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ===================== COMPLETION =====================
+function showCompletion() {
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('module-view').style.display = 'none';
+  document.getElementById('completion-view').style.display = 'block';
+  const refCount = ['mod1_ref1','mod2_ref1','mod3_ref1','mod4_ref1','mod5_ref1','mod6_ref1','mod7_ref1']
+    .filter(k => (state.get('ref_' + k, '') || '').length > 10).length;
+  const exCount = ['quiz_q1','quiz_q2','ex_lr','ex_matrix','ex_ff','ex_planning','ex_grade']
+    .filter(k => state.get(k, false)).length;
+  document.getElementById('stat-reflections').textContent = refCount;
+  document.getElementById('stat-exercises').textContent = exCount;
+  state.set('completion_date', new Date().toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' }));
+}
+
+// ===================== LOGIN =====================
+function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  if (!name) {
+    document.getElementById('login-name').style.borderColor = '#dc2626';
+    document.getElementById('login-name').placeholder = 'Ange ditt namn för att fortsätta';
+    return;
+  }
+  const org = document.getElementById('login-org').value.trim();
+  state.set('user_name', name);
+  state.set('user_org', org);
+  applyUserToUI(name, org);
+  document.getElementById('login-view').style.display = 'none';
+}
+
+function applyUserToUI(name, org) {
+  const el = document.getElementById('topbar-name');
+  el.textContent = name + (org ? ' · ' + org : '');
+  el.style.fontSize = '0.75rem';
+  el.style.color = 'rgba(253,240,232,0.75)';
+}
+
+// Allow Enter key in login form
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('login-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-org').focus(); });
+  document.getElementById('login-org').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+});
+
+// ===================== DIPLOMA =====================
+function openDiploma() {
+  const name = state.get('user_name', '');
+  const org  = state.get('user_org', '');
+  const date = state.get('completion_date', new Date().toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' }));
+
+  document.getElementById('diploma-name').textContent = name || 'Deltagare';
+  const schoolEl = document.getElementById('diploma-school');
+  schoolEl.textContent = org || '';
+  schoolEl.style.display = org ? 'block' : 'none';
+  document.getElementById('diploma-date').textContent = date;
+
+  const modulesList = document.getElementById('diploma-modules-list');
+  modulesList.innerHTML = MODULES.map(m =>
+    `<div class="diploma-module-item">${m.title}</div>`
+  ).join('');
+
+  document.getElementById('diploma-overlay').classList.add('open');
+}
+
+function closeDiploma() {
+  document.getElementById('diploma-overlay').classList.remove('open');
+}
+
+// ===================== INIT =====================
+const savedName = state.get('user_name', '');
+if (savedName) {
+  document.getElementById('login-view').style.display = 'none';
+  applyUserToUI(savedName, state.get('user_org', ''));
+}
+showHome();
+</script>
+</body>
+</html>
