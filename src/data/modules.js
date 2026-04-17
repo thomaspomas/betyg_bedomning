@@ -254,8 +254,8 @@ export const MODULES = [
   </table>
 </div>`,
       },
-      { id: 'case4', title: 'Mini-case: Bedömningsskillnad', type: 'case-mod4' },
-      { id: 'ref4', title: 'Reflektion', type: 'reflection', prompt: 'Hur sker kalibrering av bedömning i din utbildning idag? Vad fungerar bra och vad skulle kunna förbättras?', key: 'mod4_ref1' },
+      { id: 'case4', title: 'Mini-case: Primär vs. sekundär dokumentation', type: 'case-mod4' },
+      { id: 'ref4', title: 'Reflektion', type: 'reflection', prompt: 'Hur dokumenterar du elevernas prestationer i din undervisning idag – sparar du primärt underlag (originalarbeten) eller mest sekundärt (matriser, anteckningar)? Vad anser du fungerar bra och vad skulle kunna förbättras?', key: 'mod4_ref1' },
     ],
   },
   {

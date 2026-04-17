@@ -89,13 +89,13 @@ export const QUIZ_2 = {
 
 export const CASE_MOD4 = {
   key: 'mod4_case1',
-  scenario: 'Lärare A och lärare B bedömer samma projektrapport av studeranden Yusra. Lärare A sätter G, lärare B sätter VG. Lärare B motiverar: "Yusras analys är imponerande och håller klart VG-nivå." Lärare A svarar: "Ja, analysen är bra, men hennes slutsatser saknar den egna reflektionen som kriteriet kräver för VG."',
-  question: 'Hur ska situationen hanteras?',
+  scenario: 'Läraren Sara har precis rättat en skriftlig inlämningsuppgift. Hon sparar en matris där hon fyllt i betyg och kommentarer per kriterium – men raderar den inskannade originaluppgiften från elevens sida för att spara utrymme. En kollega ifrågasätter om det är ett problem.',
+  question: 'Vad har Sara gjort och vad är problemet?',
   options: [
-    { text: 'Lärare A ceder till lärare B eftersom VG alltid är bättre för studenten.', correct: false, feedback: 'Betygsbeslut ska fattas utifrån kriterierna – inte för att gynna studenten. Det vore inte rättssäkert gentemot andra studeranden.' },
-    { text: 'Lärare B ceder till lärare A utan vidare diskussion.', correct: false, feedback: 'Det kan vara rätt slutsats, men processen är fel. Båda lärarna bör gå igenom kriteriet gemensamt och grunda beslutet i texten, inte i vem som ger med sig.' },
-    { text: 'Lärarna läser rapporten gemensamt mot VG-kriteriet om slutsatser och fattar ett gemensamt motiverat beslut.', correct: true, feedback: 'Rätt! Kalibrering innebär att gemensamt gå tillbaka till kriterierna och grunda beslutet i dem – inte i vem som är mest envis. Dokumentera sedan den gemensamma bedömningen.' },
-    { text: 'Man låter en tredje lärare fatta beslut utan att diskutera.', correct: false, feedback: 'Att lägga hela beslutet på en tredje part utan att de inblandade lärarna har diskuterat igenom kriterierna löser inte grundproblemet och skapar ingen samsyn.' },
+    { text: 'Sara har sparat primär dokumentation. Det är helt korrekt.', correct: false, feedback: 'Matrisen är sekundär dokumentation – lärarens tolkning och sammanfattning. Originaluppgiften är den primära dokumentationen och bör sparas.' },
+    { text: 'Sara har bara sparat sekundär dokumentation. Problemet är att den primära (originalarbetet) är borta och beslutet inte längre kan granskas av en annan lärare.', correct: true, feedback: 'Rätt! Matrisen är lärarens analys (sekundär dokumentation). Utan originaluppgiften går det inte att verifiera om betyget sattes korrekt – det är ett rättssäkerhetsproblem.' },
+    { text: 'Det spelar ingen roll vilken dokumentation som sparas, så länge betyget är satt.', correct: false, feedback: 'Dokumentation är central för rättssäkerheten. Utan primärt underlag kan betygsbeslut inte granskas eller överklagas på ett rättvisande sätt.' },
+    { text: 'Sara har gjort rätt – matrisen är mer informativ än originaluppgiften.', correct: false, feedback: 'Matrisen visar lärarens tolkning, men inte vad eleven faktiskt presterade. Båda behövs för en rättssäker bedömning.' },
   ],
 }
 
