@@ -1,0 +1,125 @@
+import { useState } from 'react'
+import kyhLogo from '../../kyh-logo.png'
+
+export default function Login({ onLogin, supabase, profileOnly = false }) {
+  const [mode, setMode] = useState('login') // 'login' | 'register' | 'profile'
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [org, setOrg] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+
+  // If we just need to collect profile info (user is authed but has no profile yet)
+  if (profileOnly) {
+    return (
+      <div className="login-page">
+        <div className="login-card">
+          <img src={kyhLogo} alt="KYH" className="login-logo" />
+          <h1>Välkommen!</h1>
+          <p>Fyll i dina uppgifter för att komma igång.</p>
+          <input
+            type="text"
+            placeholder="Ditt namn"
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Organisation / Företag (t.ex. KYH)"
+            value={org}
+            onChange={e => setOrg(e.target.value)}
+          />
+          {error && <p style={{ color: '#c0392b', fontSize: '.9rem', marginBottom: '.5rem' }}>{error}</p>}
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              if (!name.trim()) { setError('Ange ditt namn.'); return }
+              setLoading(true)
+              await onLogin(name.trim(), org.trim())
+              setLoading(false)
+            }}
+            disabled={loading}
+          >
+            {loading ? 'Sparar…' : 'Starta kursen'}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const handleLogin = async () => {
+    setError(''); setMessage('')
+    if (!email || !password) { setError('Fyll i e-post och lösenord.'); return }
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    setLoading(false)
+    if (error) setError('Felaktig e-post eller lösenord.')
+  }
+
+  const handleRegister = async () => {
+    setError(''); setMessage('')
+    if (!email || !password || !name) { setError('Fyll i alla fält.'); return }
+    if (password.length < 6) { setError('Lösenordet måste vara minst 6 tecken.'); return }
+    setLoading(true)
+    const { error } = await supabase.auth.signUp({ email, password })
+    setLoading(false)
+    if (error) {
+      setError(error.message)
+    } else {
+      // Sign in right away (Supabase auto-confirms in some configs)
+      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+      if (loginError) {
+        setMessage('Konto skapat! Kontrollera din e-post för bekräftelse, logga sedan in.')
+        setMode('login')
+      }
+      // If login succeeded the auth listener in App will pick it up → profileOnly flow
+    }
+  }
+
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        <img src={kyhLogo} alt="KYH" className="login-logo" />
+        <h1>Betyg och bedömning</h1>
+        <p>En kurs för YH-lärare om rättssäker, likvärdig och formativ bedömning.</p>
+
+        {message && <p style={{ color: 'var(--teal-dark)', marginBottom: '1rem', fontSize: '.9rem' }}>{message}</p>}
+
+        {mode === 'login' && (
+          <>
+            <input type="email" placeholder="E-postadress" value={email} onChange={e => setEmail(e.target.value)} />
+            <input type="password" placeholder="Lösenord" value={password} onChange={e => setPassword(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+            {error && <p style={{ color: '#c0392b', fontSize: '.9rem', marginBottom: '.5rem' }}>{error}</p>}
+            <button className="btn btn-primary" onClick={handleLogin} disabled={loading}>
+              {loading ? 'Loggar in…' : 'Logga in'}
+            </button>
+            <div className="login-divider">eller</div>
+            <button className="btn btn-outline" onClick={() => { setMode('register'); setError('') }}>
+              Skapa nytt konto
+            </button>
+          </>
+        )}
+
+        {mode === 'register' && (
+          <>
+            <input type="text" placeholder="Ditt namn" value={name} onChange={e => setName(e.target.value)} />
+            <input type="text" placeholder="Organisation / Företag (t.ex. KYH)" value={org} onChange={e => setOrg(e.target.value)} />
+            <input type="email" placeholder="E-postadress" value={email} onChange={e => setEmail(e.target.value)} />
+            <input type="password" placeholder="Lösenord (minst 6 tecken)" value={password} onChange={e => setPassword(e.target.value)} />
+            {error && <p style={{ color: '#c0392b', fontSize: '.9rem', marginBottom: '.5rem' }}>{error}</p>}
+            <button className="btn btn-primary" onClick={handleRegister} disabled={loading}>
+              {loading ? 'Skapar konto…' : 'Skapa konto och börja'}
+            </button>
+            <div className="login-divider">eller</div>
+            <button className="btn btn-ghost" onClick={() => { setMode('login'); setError('') }}>
+              Jag har redan ett konto
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
