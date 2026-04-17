@@ -312,7 +312,7 @@ export const MODULES = [
   <div class="example-box"><div class="ex-label">Exempel: Transparent betygskommunikation (IG)</div>
     <p style="font-size:0.88rem;">"Din rapport uppfyller G-kriterierna för analys och källhantering. Däremot uppfyller den ännu inte G-kriteriet för slutsatser: slutsatserna behöver följa logiskt av analysen. För att nå G behöver du revidera avsnittet om slutsatser. Jag föreslår att vi ses under handledningen onsdag."</p>
   </div>
-  <div class="info-box"><strong>Studerandens rätt</strong>Studeranden har rätt att begära en motivering till betyget. Denna motivering ska kunna ges skriftligt och baseras på bedömningskriterierna.</div>
+  <div class="info-box"><strong>Studerandens rätt:</strong> Studeranden har rätt att begära en motivering till betyget. Denna motivering ska kunna ges skriftligt och baseras på bedömningskriterierna.</div>
 </div>`,
       },
       { id: 'ref5', title: 'Reflektion', type: 'reflection', prompt: 'Hur kommunicerar du idag dina betygsbeslut till studeranden? Vad kan förbättras?', key: 'mod5_ref1' },
