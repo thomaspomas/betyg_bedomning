@@ -427,7 +427,7 @@ export const MODULES = [
     <li>Psykologisk trygghet – ingen ska räds att bedömas av en kurskamrat</li>
     <li>Läraren har slutgiltigt ansvar för betygssättning</li>
   </ul>
-  <div class="warning-box"><strong>Vanlig fallgrop</strong>Kamratbedömning som inte har tydliga ramar leder till "kompisbedömning" – alla får bra omdömen för att ingen vill verka kritisk.</div>
+  <div class="warning-box"><strong>Vanlig fallgrop:</strong> Kamratbedömning som inte har tydliga ramar leder till "kompisbedömning" – alla får bra omdömen för att ingen vill verka kritisk.</div>
 </div>`,
       },
       { id: 'planning', title: 'Planera för aktiva studeranden', type: 'planning' },
