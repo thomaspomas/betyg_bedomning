@@ -258,7 +258,8 @@ a:hover { text-decoration: underline; }
   margin: 2rem 0;
 }
 .completion-banner h2 { margin-bottom: .5rem; color: var(--orange-dark); }
-.completion-banner .btn { margin-top: 1rem; background: #fff; color: var(--teal-dark); border: 2px solid var(--teal); }
+.completion-banner .btn { margin-top: 1rem; background: #fff; color: var(--teal-dark); border: 2px solid var(--teal); transition: transform .15s, box-shadow .15s; }
+.completion-banner .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
 
 /* ===== MODULE VIEW ===== */
 .module-page { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
