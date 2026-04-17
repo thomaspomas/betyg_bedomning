@@ -74,7 +74,7 @@ export const MODULES = [
 <div class="content-block">
   <h3>Läranderesultat – kärnan i YH-bedömning</h3>
   <p>Alla kurser inom YH har <strong>läranderesultat</strong> som definierar vad den studerande ska kunna göra, veta eller förstå efter avslutad kurs. Det är dessa – och bara dessa – som utgör grunden för betygssättning.</p>
-  <div class="info-box"><strong>Definition (MYH)</strong>Läranderesultat beskriver vad den studerande förväntas <em>kunna demonstrera</em> efter avslutad kurs – i termer av kunskaper, färdigheter och kompetenser.</div>
+  <div class="info-box"><strong>Definition (MYH):</strong> Läranderesultat beskriver vad den studerande förväntas <em>kunna demonstrera</em> efter avslutad kurs – i termer av kunskaper, färdigheter och kompetenser.</div>
   <h4>Läranderesultat är inte samma som undervisningsmål</h4>
   <div class="two-cols">
     <div style="background:#fff1f2;border-radius:8px;padding:14px;">
