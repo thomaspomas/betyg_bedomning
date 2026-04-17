@@ -249,7 +249,8 @@ a:hover { text-decoration: underline; }
 }
 
 .completion-banner {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--orange) 100%);
+  background: var(--orange);
+  border: 2px solid var(--teal);
   color: #fff;
   border-radius: var(--radius);
   padding: 1.5rem;
