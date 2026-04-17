@@ -140,6 +140,7 @@ export default function App() {
           onOpenModule={openModule}
           onOpenDiploma={() => setShowDiploma(true)}
           onCompletion={goCompletion}
+          onLogout={() => supabase.auth.signOut()}
         />
       )}
 

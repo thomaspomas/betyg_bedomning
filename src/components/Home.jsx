@@ -1,6 +1,6 @@
 import kyhLogo from '../../kyh-logo.png'
 
-export default function Home({ profile, modules, getModuleProgress, allModulesDone, onOpenModule, onOpenDiploma, onCompletion }) {
+export default function Home({ profile, modules, getModuleProgress, allModulesDone, onOpenModule, onOpenDiploma, onCompletion, onLogout }) {
   return (
     <div>
       <div className="home-hero">
@@ -13,6 +13,9 @@ export default function Home({ profile, modules, getModuleProgress, allModulesDo
             {profile.organisation ? ` – ${profile.organisation}` : ''}
           </p>
         )}
+        <button onClick={onLogout} style={{ marginTop: '1rem', background: 'transparent', border: '1px solid rgba(255,255,255,.6)', color: '#fff', borderRadius: '20px', padding: '.3rem 1rem', fontSize: '.85rem', cursor: 'pointer' }}>
+          Logga ut
+        </button>
       </div>
 
       <div className="home-content">
