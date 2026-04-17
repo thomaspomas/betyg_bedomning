@@ -7,7 +7,7 @@ export default function PrivacyPolicy({ onClose }) {
         <p className="privacy-date">Senast uppdaterad: 17 april 2026</p>
 
         <h3>1. Personuppgiftsansvarig</h3>
-        <p>KYH – Kompetens och Yrkeshögskolan ansvarar för behandlingen av dina personuppgifter i denna kursapplikation.</p>
+        <p>KYH ansvarar för behandlingen av dina personuppgifter i denna kursapplikation.</p>
 
         <h3>2. Vilka uppgifter vi samlar in</h3>
         <p>Vi samlar in och lagrar följande uppgifter när du använder tjänsten:</p>
