@@ -614,28 +614,6 @@ a:hover { text-decoration: underline; }
 }
 .privacy-close:hover { color: var(--text); }
 
-@page { margin: 1cm; size: A4 portrait; }
-@media print {
-  body * { visibility: hidden; }
-  .diploma-overlay {
-    visibility: visible;
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    min-height: 100vh;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .diploma, .diploma * { visibility: visible; }
-  .diploma {
-    box-shadow: none;
-    border-width: 3px;
-    width: 100%;
-    max-width: 500px;
-  }
-  .diploma-actions { display: none !important; }
-}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
