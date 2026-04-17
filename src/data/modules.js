@@ -13,8 +13,8 @@ export const MODULES = [
 <div class="content-block">
   <h3>Bedömning och betyg – två olika saker</h3>
   <p>Inom Yrkeshögskolan används ofta orden "bedömning" och "betyg" som om de vore synonymer – men de är det inte.</p>
-  <div class="info-box"><strong>Bedömning</strong>En process där läraren samlar in och tolkar information om vad den studerande kan och förstår. Kan vara formativ (för lärande) eller summativ (för betygssättning).</div>
-  <div class="info-box"><strong>Betyg</strong>En formell, summativ värdering som dokumenterar den studerandes kunskapsnivå i förhållande till kursmålen.</div>
+  <div class="info-box"><strong>Bedömning</strong> En process där läraren samlar in och tolkar information om vad den studerande kan och förstår. Kan vara formativ (för lärande) eller summativ (för betygssättning).</div>
+  <div class="info-box"><strong>Betyg</strong> En formell, summativ värdering som dokumenterar den studerandes kunskapsnivå i förhållande till kursmålen.</div>
   <h4>Tre betygsgrader inom YH</h4>
   <ul>
     <li><span class="grade grade-vg">VG</span> <strong>Väl Godkänd</strong> – Studenten uppfyller kraven på ett väl godkänt sätt</li>
@@ -117,7 +117,7 @@ export const MODULES = [
     <li><strong>Tillämpning:</strong> Studenten kan i ett givet case-scenario identifiera vilken lagstiftning som är relevant och motivera varför</li>
     <li><strong>Yrkesutövning:</strong> Studenten kan i en simulerad arbetsuppgift agera lagenligt och motivera sina val</li>
   </ol>
-  <div class="info-box"><strong>Princip</strong>För varje läranderesultat: Fråga dig "Hur vet jag att studenten kan detta?" Det svaret är ditt bedömningsunderlag.</div>
+  <div class="info-box"><strong>Princip</strong> För varje läranderesultat: Fråga dig "Hur vet jag att studenten kan detta?" Det svaret är ditt bedömningsunderlag.</div>
   <h4>Vanliga verb och deras bedömningsimplikationer</h4>
   <table class="data-table">
     <tr><th>Verb</th><th>Nivå</th><th>Lämplig bedömningsform</th></tr>
@@ -196,7 +196,7 @@ export const MODULES = [
       </tr>
     </table>
   </div>
-  <div class="success-box" style="margin-top:16px;"><strong>Tips</strong>För betyget <span class="grade grade-g">G</span> ska studenten uppfylla <em>alla</em> G-kriterier. För <span class="grade grade-vg">VG</span> ska alla VG-kriterier uppfyllas.</div>
+  <div class="success-box" style="margin-top:16px;"><strong>Tips</strong> För betyget <span class="grade grade-g">G</span> ska studenten uppfylla <em>alla</em> G-kriterier. För <span class="grade grade-vg">VG</span> ska alla VG-kriterier uppfyllas.</div>
 </div>
 <div class="content-block">
   <h3>Vanliga misstag i matriser</h3>
@@ -233,7 +233,7 @@ export const MODULES = [
     <li>Läraren värderar prestationerna mot bedömningskriterierna</li>
     <li>Läraren fattar betygsbeslut och dokumenterar det</li>
   </ul>
-  <div class="info-box"><strong>Dokumentation</strong>All primär bedömning ska dokumenteras så att beslutet går att spåra i efterhand. Spara bedömningsunderlag och notera mot vilka kriterier betyget sattes.</div>
+  <div class="info-box"><strong>Dokumentation</strong> All primär bedömning ska dokumenteras så att beslutet går att spåra i efterhand. Spara bedömningsunderlag och notera mot vilka kriterier betyget sattes.</div>
 </div>
 <div class="content-block">
   <h3>Sekundär bedömning – extern kontroll</h3>
@@ -257,7 +257,7 @@ export const MODULES = [
       <li>Gemensamt dokument upprättas med samsynen</li>
     </ol>
   </div>
-  <div class="warning-box"><strong>Viktigt</strong>Kalibrering handlar inte om att alla alltid ska komma fram till exakt samma betyg. Det handlar om att ha en gemensam förståelse för vad kriterierna innebär.</div>
+  <div class="warning-box"><strong>Viktigt</strong> Kalibrering handlar inte om att alla alltid ska komma fram till exakt samma betyg. Det handlar om att ha en gemensam förståelse för vad kriterierna innebär.</div>
 </div>`,
       },
       { id: 'case4', title: 'Mini-case: Bedömningsskillnad', type: 'case-mod4' },
@@ -278,7 +278,7 @@ export const MODULES = [
 <div class="content-block">
   <h3>Det sammantagna betygsbeslut</h3>
   <p>Betyget sätts sällan på en enda uppgift. Oftast finns flera bedömningsunderlag som ska <strong>vägas samman</strong> till ett samlat betygsbeslut.</p>
-  <div class="info-box"><strong>Princip</strong>Det sammantagna betygsbeslut baseras på <em>helheten</em> av insamlad information om studerandens kunskaper, färdigheter och kompetenser i relation till läranderesultaten.</div>
+  <div class="info-box"><strong>Princip</strong> Det sammantagna betygsbeslut baseras på <em>helheten</em> av insamlad information om studerandens kunskaper, färdigheter och kompetenser i relation till läranderesultaten.</div>
   <h4>Tre modeller för sammanvägning</h4>
   <p><strong>1. Viktad modell</strong> – Varje bedömningsmoment tilldelas en vikt som framgår av kursplanen.</p>
   <p><strong>2. Kriteriematris-modell</strong> – Alla läranderesultat ska vara minst G för att få G i kursen.</p>
