@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import kyhLogo from '../../kyh-logo.png'
+import PrivacyPolicy from './PrivacyPolicy'
 
 export default function Login({ onLogin, supabase, profileOnly = false }) {
   const [mode, setMode] = useState('login') // 'login' | 'register' | 'profile'
@@ -10,6 +11,7 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [showPrivacy, setShowPrivacy] = useState(false)
 
   // If we just need to collect profile info (user is authed but has no profile yet)
   if (profileOnly) {
@@ -80,6 +82,7 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
 
   return (
     <div className="login-page">
+      {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
       <div className="login-card">
         <img src={kyhLogo} alt="KYH" className="login-logo" />
         <h1>Betyg och bedömning</h1>
@@ -119,6 +122,11 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
             </button>
           </>
         )}
+        <p style={{ fontSize: '.8rem', color: 'var(--muted)', marginTop: '1.5rem' }}>
+          <button className="btn-ghost" style={{ fontSize: '.8rem', padding: 0 }} onClick={() => setShowPrivacy(true)}>
+            Integritetspolicy
+          </button>
+        </p>
       </div>
     </div>
   )
