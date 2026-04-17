@@ -61,7 +61,7 @@ export default function Home({ profile, modules, getModuleProgress, allModulesDo
 
       <footer className="site-footer">
         <p>© {new Date().getFullYear()} KYH. Alla rättigheter förbehållna.</p>
-        <button className="btn-ghost" style={{ fontSize: '.8rem', padding: 0 }} onClick={() => setShowPrivacy(true)}>
+        <button className="btn-ghost" style={{ fontSize: '.8rem', padding: 0, border: 'none', outline: 'none' }} onClick={() => setShowPrivacy(true)}>
           Integritetspolicy
         </button>
       </footer>
