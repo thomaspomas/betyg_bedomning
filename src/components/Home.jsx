@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import kyhLogo from '../../kyh-logo.png'
+import PrivacyPolicy from './PrivacyPolicy'
 
 export default function Home({ profile, modules, getModuleProgress, allModulesDone, onOpenModule, onOpenDiploma, onCompletion, onLogout }) {
+  const [showPrivacy, setShowPrivacy] = useState(false)
   return (
     <div>
+      {showPrivacy && <PrivacyPolicy onClose={() => setShowPrivacy(false)} />}
       <div className="home-hero">
         <img src={kyhLogo} alt="KYH" />
         <h1>Betyg och bedömning</h1>
@@ -54,6 +58,13 @@ export default function Home({ profile, modules, getModuleProgress, allModulesDo
           })}
         </div>
       </div>
+
+      <footer className="site-footer">
+        <p>© {new Date().getFullYear()} KYH – Kompetens och Yrkeshögskolan. Alla rättigheter förbehållna.</p>
+        <button className="btn-ghost" style={{ fontSize: '.8rem', padding: 0 }} onClick={() => setShowPrivacy(true)}>
+          Integritetspolicy
+        </button>
+      </footer>
     </div>
   )
 }
