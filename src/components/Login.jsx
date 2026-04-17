@@ -3,7 +3,7 @@ import kyhLogo from '../../kyh-logo.png'
 import PrivacyPolicy from './PrivacyPolicy'
 
 export default function Login({ onLogin, supabase, profileOnly = false }) {
-  const [mode, setMode] = useState('login') // 'login' | 'register' | 'profile'
+  const [mode, setMode] = useState('login') // 'login' | 'register' | 'forgot'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -60,6 +60,18 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
     if (error) setError('Felaktig e-post eller lösenord.')
   }
 
+  const handleForgot = async () => {
+    setError(''); setMessage('')
+    if (!email) { setError('Ange din e-postadress.'); return }
+    setLoading(true)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.href,
+    })
+    setLoading(false)
+    if (error) setError('Något gick fel. Kontrollera e-postadressen.')
+    else setMessage('Ett återställningsmail har skickats. Kolla din inkorg.')
+  }
+
   const handleRegister = async () => {
     setError(''); setMessage('')
     if (!email || !password || !name) { setError('Fyll i alla fält.'); return }
@@ -99,9 +111,30 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
             <button className="btn btn-primary" onClick={handleLogin} disabled={loading}>
               {loading ? 'Loggar in…' : 'Logga in'}
             </button>
+            <button className="btn btn-ghost" style={{ marginTop: '.25rem', fontSize: '.85rem' }} onClick={() => { setMode('forgot'); setError('') }}>
+              Glömt lösenordet?
+            </button>
             <div className="login-divider">eller</div>
             <button className="btn btn-outline" onClick={() => { setMode('register'); setError('') }}>
               Skapa nytt konto
+            </button>
+          </>
+        )}
+
+        {mode === 'forgot' && (
+          <>
+            <p style={{ fontSize: '.9rem', color: 'var(--muted)', marginBottom: '1rem' }}>
+              Ange din e-postadress så skickar vi ett återställningsmail.
+            </p>
+            <input type="email" placeholder="E-postadress" value={email} onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleForgot()} />
+            {error && <p style={{ color: '#c0392b', fontSize: '.9rem', marginBottom: '.5rem' }}>{error}</p>}
+            <button className="btn btn-primary" onClick={handleForgot} disabled={loading}>
+              {loading ? 'Skickar…' : 'Skicka återställningsmail'}
+            </button>
+            <div className="login-divider">eller</div>
+            <button className="btn btn-ghost" onClick={() => { setMode('login'); setError(''); setMessage('') }}>
+              Tillbaka till inloggning
             </button>
           </>
         )}
