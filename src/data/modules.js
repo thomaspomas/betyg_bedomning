@@ -175,22 +175,19 @@ export const MODULES = [
   <p style="margin-bottom:12px;font-size:0.85rem;color:#6b7280;">Läranderesultat: "Studeranden ska kunna tolka byggritningar och tillämpa relevanta BBR-krav."</p>
   <div style="overflow-x:auto;">
     <table class="matrix-table">
-      <tr><th style="min-width:140px;">Kriterium</th><th class="th-ig">IG</th><th class="th-g">G</th><th class="th-vg">VG</th></tr>
+      <tr><th style="min-width:140px;">Kriterium</th><th class="th-g">G</th><th class="th-vg">VG</th></tr>
       <tr>
         <td class="criteria-name">Tolkning av byggritning</td>
-        <td>Kan inte identifiera grundläggande måttsättning, skalor eller beteckningar.</td>
         <td>Identifierar korrekt mått, skalor och standardbeteckningar på en given plan- eller sektionsritning.</td>
         <td>Tolkar ritningen självständigt, uppmärksammar avvikelser och motiverar vad dessa innebär i praktiken.</td>
       </tr>
       <tr>
         <td class="criteria-name">Tillämpning av BBR</td>
-        <td>Saknar koppling till BBR eller hänvisar till fel kapitel.</td>
         <td>Identifierar vilket BBR-avsnitt som är relevant och redovisar kravet korrekt.</td>
         <td>Tillämpar BBR-kravet på ett specifikt byggfall, motiverar tolkningen och lyfter eventuella tolkningssvårigheter.</td>
       </tr>
       <tr>
         <td class="criteria-name">Slutsatser och åtgärdsförslag</td>
-        <td>Slutsatser saknas eller är inte kopplade till ritningen eller BBR.</td>
         <td>Drar korrekta slutsatser och föreslår en konkret åtgärd utifrån identifierat krav.</td>
         <td>Motiverar åtgärdsförslaget med hänsyn till både tekniska krav och praktiska förutsättningar.</td>
       </tr>
