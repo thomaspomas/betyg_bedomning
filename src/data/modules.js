@@ -406,7 +406,7 @@ export const MODULES = [
     <li>Ger och tar emot bedömning från kurskamrater (<strong>kamratbedömning</strong>)</li>
     <li>Tar ansvar för sin lärutveckling (<strong>agency</strong>)</li>
   </ul>
-  <div class="info-box"><strong>Koppling till YH:s mål</strong>YH utbildar yrkesverksamma som ska kunna reflektera över och vidareutveckla sin kompetens i arbetslivet. Självbedömningsförmåga är i sig ett centralt yrkeskompetens.</div>
+  <div class="info-box"><strong>Koppling till YH:s mål:</strong> YH utbildar yrkesverksamma som ska kunna reflektera över och vidareutveckla sin kompetens i arbetslivet. Självbedömningsförmåga är i sig ett centralt yrkeskompetens.</div>
 </div>
 <div class="content-block">
   <h3>Självbedömning i praktiken</h3>
