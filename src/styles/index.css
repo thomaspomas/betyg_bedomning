@@ -614,9 +614,18 @@ a:hover { text-decoration: underline; }
 .privacy-close:hover { color: var(--text); }
 
 @media print {
-  body > * { display: none !important; }
-  .diploma-overlay { position: static; background: none; padding: 0; }
-  .diploma { border-width: 4px; box-shadow: none; }
+  body * { visibility: hidden; }
+  .diploma, .diploma * { visibility: visible; }
+  .diploma {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: none;
+    border-width: 4px;
+  }
+  .diploma-overlay { background: none; }
   .diploma-actions { display: none; }
 }
 
