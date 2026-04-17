@@ -294,7 +294,7 @@ export const MODULES = [
   </div>
 </div>`,
       },
-      { id: 'grade-decision', title: 'Övning: Sätt betyget', type: 'grade-decision' },
+      { id: 'grade-decision', title: 'Övning: Sätt betyget', type: 'grade_decision' },
       {
         id: 'transparency',
         title: 'Transparens mot studerande',
