@@ -14,7 +14,7 @@ export default function CaseExercise({ exerciseKey, exercises, onExerciseDone })
 
   return (
     <div className="exercise-card">
-      <h3>Fallstudie: Kalibrering</h3>
+      <h3>Fallstudie: Primär vs. sekundär dokumentation</h3>
       <div className="ff-original" style={{ marginBottom: '1rem' }}>
         {c.scenario}
       </div>
