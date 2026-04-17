@@ -249,16 +249,16 @@ a:hover { text-decoration: underline; }
 }
 
 .completion-banner {
-  background: var(--orange);
-  border: 2px solid var(--teal);
-  color: #fff;
+  background: #fff;
+  border: 2px solid var(--orange);
+  color: var(--text);
   border-radius: var(--radius);
   padding: 1.5rem;
   text-align: center;
   margin: 2rem 0;
 }
-.completion-banner h2 { margin-bottom: .5rem; }
-.completion-banner .btn { margin-top: 1rem; background: #fff; color: var(--teal-dark); }
+.completion-banner h2 { margin-bottom: .5rem; color: var(--orange-dark); }
+.completion-banner .btn { margin-top: 1rem; background: #fff; color: var(--teal-dark); border: 2px solid var(--teal); }
 
 /* ===== MODULE VIEW ===== */
 .module-page { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
