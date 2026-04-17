@@ -613,22 +613,28 @@ a:hover { text-decoration: underline; }
 }
 .privacy-close:hover { color: var(--text); }
 
-@page { margin: 1cm; }
+@page { margin: 0; size: A4 portrait; }
 @media print {
-  body * { visibility: hidden; }
-  .diploma, .diploma * { visibility: visible; }
-  .diploma {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    width: 100%;
-    max-width: 100%;
-    box-shadow: none;
-    border-width: 4px;
-    padding: 1.5rem;
-    page-break-inside: avoid;
+  body > * { display: none !important; }
+  body > .app { display: block !important; }
+  .app > * { display: none !important; }
+  .diploma-overlay {
+    display: flex !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: white !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
-  .diploma-overlay { background: none; }
-  .diploma-actions { display: none; }
+  .diploma {
+    display: block !important;
+    box-shadow: none !important;
+    border-width: 3px !important;
+    max-width: 170mm !important;
+    width: 170mm !important;
+    padding: 2rem !important;
+  }
+  .diploma-actions { display: none !important; }
 }
 
 /* ===== RESPONSIVE ===== */
