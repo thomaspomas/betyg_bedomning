@@ -60,7 +60,7 @@ export default function Home({ profile, modules, getModuleProgress, allModulesDo
       </div>
 
       <footer className="site-footer">
-        <p>© {new Date().getFullYear()} KYH – Kompetens och Yrkeshögskolan. Alla rättigheter förbehållna.</p>
+        <p>© {new Date().getFullYear()} KYH – Yrkeshögskolan. Alla rättigheter förbehållna.</p>
         <button className="btn-ghost" style={{ fontSize: '.8rem', padding: 0 }} onClick={() => setShowPrivacy(true)}>
           Integritetspolicy
         </button>
