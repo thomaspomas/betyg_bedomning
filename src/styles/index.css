@@ -613,17 +613,19 @@ a:hover { text-decoration: underline; }
 }
 .privacy-close:hover { color: var(--text); }
 
+@page { margin: 1cm; }
 @media print {
   body * { visibility: hidden; }
   .diploma, .diploma * { visibility: visible; }
   .diploma {
     position: fixed;
-    inset: 0;
-    margin: auto;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    max-width: 100%;
     box-shadow: none;
     border-width: 4px;
+    padding: 1.5rem;
+    page-break-inside: avoid;
   }
   .diploma-overlay { background: none; }
   .diploma-actions { display: none; }
