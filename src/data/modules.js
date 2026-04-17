@@ -214,7 +214,7 @@ export const MODULES = [
   {
     id: 4,
     title: 'Primär och sekundär bedömning',
-    desc: 'Kollegial kalibrering, samsyn och dokumentation för rättssäker bedömning.',
+    desc: 'Skillnaden mellan primär och sekundär dokumentation samt bedömningens primära och sekundära funktioner.',
     time: '~13 min',
     sections: [
       {
@@ -223,38 +223,35 @@ export const MODULES = [
         type: 'theory',
         html: `
 <div class="content-block">
-  <h3>Primär bedömning – kurslärarens ansvar</h3>
-  <p>Den <strong>primära bedömningen</strong> görs av den lärare som ansvarar för kursen.</p>
-  <ul>
-    <li>Läraren samlar in bedömningsunderlag (uppgifter, prov, observationer)</li>
-    <li>Läraren värderar prestationerna mot bedömningskriterierna</li>
-    <li>Läraren fattar betygsbeslut och dokumenterar det</li>
-  </ul>
-  <div class="info-box"><strong>Dokumentation</strong> All primär bedömning ska dokumenteras så att beslutet går att spåra i efterhand. Spara bedömningsunderlag och notera mot vilka kriterier betyget sattes.</div>
+  <p>Begreppen primär och sekundär bedömning används inom skolan för att skilja på det direkta elevunderlaget och den efterföljande analysen eller funktionen av bedömningen.</p>
 </div>
 <div class="content-block">
-  <h3>Sekundär bedömning – extern kontroll</h3>
-  <p>I många YH-utbildningar används <strong>sekundär bedömning</strong> – en extern examinator eller en kollegas granskning. Det är ett viktigt rättssäkerhetsinstrument.</p>
-  <h4>När används sekundär bedömning?</h4>
-  <ul>
-    <li>Vid examinationsmoment med höga krav på likvärdighet</li>
-    <li>För betyget VG, om det är specificerat i utbildningsplanen</li>
-    <li>Vid oklara eller tveksamma gränsfall</li>
-    <li>Vid kompletteringar och omprövningar</li>
-  </ul>
-</div>
-<div class="content-block">
-  <h3>Kalibrering och samsyn</h3>
-  <p>Om flera lärare bedömer samma kurs är <strong>kalibrering</strong> avgörande för likvärdighet.</p>
-  <div class="example-box"><div class="ex-label">Hur en kalibreringssession kan se ut</div>
-    <ol style="font-size:0.88rem;">
-      <li>Alla lärare bedömer samma anonymiserade uppgift oberoende av varandra</li>
-      <li>Bedömningarna jämförs och skillnader diskuteras</li>
-      <li>Lärarna enas om tolkningar av gränsfall och oklara fall</li>
-      <li>Gemensamt dokument upprättas med samsynen</li>
-    </ol>
+  <h3>1. Primär och sekundär dokumentation</h3>
+  <p>Inom lärares dokumentationsarbete syftar begreppen på hur underlag sparas och bearbetas:</p>
+  <div class="info-box">
+    <strong>Primär dokumentation:</strong> Elevens prestation i sitt originalutförande – en inskriven text, en bild, en inspelning eller ett fysiskt slöjdarbete. Fördelen är att underlaget är objektivt och kan bedömas igen av andra lärare.
   </div>
-  <div class="warning-box"><strong>Viktigt</strong> Kalibrering handlar inte om att alla alltid ska komma fram till exakt samma betyg. Det handlar om att ha en gemensam förståelse för vad kriterierna innebär.</div>
+  <div class="info-box">
+    <strong>Sekundär dokumentation:</strong> Lärarens tolkning och sammanfattning av elevens kunskaper. Det tar ofta formen av matriser, anteckningar eller tabeller där läraren har värderat prestationen mot betygskriterier eller mål.
+  </div>
+</div>
+<div class="content-block">
+  <h3>2. Primära och sekundära funktioner</h3>
+  <p>När man talar om bedömningens eller betygens funktioner syftar man på syftet med informationen:</p>
+  <div class="info-box">
+    <strong>Primär funktion:</strong> Pedagogisk och riktar sig till arbetet i skolan. Syftet är att ge eleven återkoppling, hjälpa läraren att identifiera stödbehov och att utveckla undervisningen (formativt syfte).
+  </div>
+  <div class="info-box">
+    <strong>Sekundär funktion:</strong> Administrativ eller selektiv. Handlar om hur bedömningen används efter skolan – till exempel som urvalsinstrument för vidare studier eller som information till arbetsgivare.
+  </div>
+</div>
+<div class="content-block">
+  <h3>Sammanfattning av skillnader</h3>
+  <table class="data-table">
+    <tr><th>Typ</th><th>Fokus (Dokumentation)</th><th>Fokus (Funktion)</th></tr>
+    <tr><td><strong>Primär</strong></td><td>Elevens faktiska originalarbete (text, prov, film).</td><td>Den lärande processen och återkoppling i klassrummet.</td></tr>
+    <tr><td><strong>Sekundär</strong></td><td>Lärarens analys och sammanfattning i matriser/omdömen.</td><td>Betyg som urval för antagning till högre studier.</td></tr>
+  </table>
 </div>`,
       },
       { id: 'case4', title: 'Mini-case: Bedömningsskillnad', type: 'case-mod4' },
