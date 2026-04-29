@@ -24,10 +24,11 @@ export async function getProgress(userId) {
 }
 
 export async function markSectionDone(userId, moduleId, sectionId) {
-  await supabase.from('user_progress').upsert(
-    { user_id: userId, module_id: moduleId, section_id: sectionId },
-    { onConflict: 'user_id,module_id,section_id' }
-  )
+  const { error } = await supabase.rpc('mark_course_section_done', {
+    p_module_id: moduleId,
+    p_section_id: sectionId,
+  })
+  if (error) throw error
 }
 
 // ---------- REFLECTIONS ----------
@@ -40,10 +41,11 @@ export async function getReflections(userId) {
 }
 
 export async function saveReflection(userId, key, content) {
-  await supabase.from('user_reflections').upsert(
-    { user_id: userId, reflection_key: key, content, updated_at: new Date().toISOString() },
-    { onConflict: 'user_id,reflection_key' }
-  )
+  const { error } = await supabase.rpc('save_course_reflection', {
+    p_reflection_key: key,
+    p_content: content,
+  })
+  if (error) throw error
 }
 
 // ---------- EXERCISES ----------
@@ -56,8 +58,8 @@ export async function getExercises(userId) {
 }
 
 export async function markExerciseDone(userId, key) {
-  await supabase.from('user_exercises').upsert(
-    { user_id: userId, exercise_key: key },
-    { onConflict: 'user_id,exercise_key' }
-  )
+  const { error } = await supabase.rpc('mark_course_exercise_done', {
+    p_exercise_key: key,
+  })
+  if (error) throw error
 }

@@ -1,10 +1,22 @@
 import kyhLogo from '../../kyh-logo.png'
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
 export default function Diploma({ name, org, onClose }) {
   const today = new Date().toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })
 
   const handlePrint = () => {
+    const safeName = escapeHtml(name || 'Deltagaren')
+    const safeOrg = org ? escapeHtml(org) : ''
     const win = window.open('', '_blank', 'width=700,height=900')
+    if (!win) return
     win.document.write(`<!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -48,8 +60,8 @@ export default function Diploma({ name, org, onClose }) {
   <div class="diploma">
     <h2>Kursintyg</h2>
     <p class="sub">Detta intygar att</p>
-    <div class="diploma-name">${name || 'Deltagaren'}</div>
-    ${org ? `<div class="org">${org}</div>` : ''}
+    <div class="diploma-name">${safeName}</div>
+    ${safeOrg ? `<div class="org">${safeOrg}</div>` : ''}
     <div class="course">
       har genomfört KYH:s kurs<br>
       <strong>Betyg och bedömning</strong><br>

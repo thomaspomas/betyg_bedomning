@@ -77,7 +77,11 @@ export default function Login({ onLogin, supabase, profileOnly = false }) {
     if (!email || !password || !name) { setError('Fyll i alla fält.'); return }
     if (password.length < 6) { setError('Lösenordet måste vara minst 6 tecken.'); return }
     setLoading(true)
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name: name.trim(), organisation: org.trim() } },
+    })
     setLoading(false)
     if (error) {
       setError(error.message)
